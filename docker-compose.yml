@@ -1,0 +1,17 @@
+version: "3.8"
+services:
+  db:
+    image: mysql:8.0.28
+    platform: linux/x86_64
+    container_name: db
+    restart: on-failure
+    volumes:
+      - ./local_database:/docker-entrypoint-initdb.d
+    environment:
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+    ports:
+      - 3306:3306
+    healthcheck:
+      timeout: 2s
+      retries: 10
