@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import Entity from './Entity';
+import Entity, { IEntity } from './Entity';
 
 const userSchema = Joi.object({
   id: Joi.string().uuid(),
@@ -7,8 +7,7 @@ const userSchema = Joi.object({
   password: Joi.string().min(8).max(30).required(),
 });
 
-export interface IUser {
-  id?: string; 
+export interface IUser extends IEntity {
   name: any;
   password: string;
 }
