@@ -10,8 +10,8 @@ app.listen(PORT, async () => {
   try {
     console.log(`Listeaning on port ${PORT}!`);
     await db.raw("SELECT 1");
-    console.log("Server is running!");
+    console.log("DB is running!");
   } catch {
-    console.log("Server is not running!");
+    console.log("DB is not running!");
   }
 });

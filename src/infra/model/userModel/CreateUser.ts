@@ -3,6 +3,7 @@ import knex from "../../db/config";
 
 export default class CreateUser {
   static async execute(user: User) {
-    await knex('User').insert(user);
+    await knex('User')
+      .insert(user);
   }
 }
