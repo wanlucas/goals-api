@@ -1,5 +1,5 @@
-import User, { IUser } from "../../entity/User";
-import userModel from "../../../infra/model/userModel";
+import User, { IUser } from '../../entity/User';
+import userModel from '../../../infra/model/userModel';
 
 export default class CreateUser {
   public async execute(body: IUser) {

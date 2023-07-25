@@ -1,6 +1,6 @@
-import Joi from "joi";
+import Joi from 'joi';
 import { v4 as uuid } from 'uuid';
-import { UnprocessableEntityError } from "../constant/HttpError";
+import { UnprocessableEntityError } from '../constant/HttpError';
 
 export interface IEntity {
   id?: string;

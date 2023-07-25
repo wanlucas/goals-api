@@ -1,5 +1,5 @@
-import Entity, { IEntity } from "./Entity";
-import Joi from "joi";
+import Entity, { IEntity } from './Entity';
+import Joi from 'joi';
 
 const branchSchema = Joi.object({
   id: Joi.string().uuid(),

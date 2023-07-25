@@ -1,11 +1,11 @@
-import User from "../../entity/User";
-import CreateUser from "./CreateUser";
-import FindUser from "./FindUser";
+import User from '../../entity/User';
+import CreateUser from './CreateUser';
+import FindUser from './FindUser';
 
 class UserUseCase {
   constructor(
-    public findUser: (id: string) => Promise<User>,
-    public createUser: (body: any) => Promise<void>,
+    public findOne: (id: string) => Promise<User>,
+    public create: (body: any) => Promise<void>,
   ) { }
 }
 

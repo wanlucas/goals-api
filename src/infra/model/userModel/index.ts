@@ -1,6 +1,6 @@
-import User from "../../../domain/entity/User";
-import FindUser from "./FindUser";
-import CreateUser from "./CreateUser";
+import User from '../../../domain/entity/User';
+import FindUser from './FindUser';
+import CreateUser from './CreateUser';
 
 class UserModel {
   constructor(

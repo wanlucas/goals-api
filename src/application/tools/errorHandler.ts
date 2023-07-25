@@ -1,5 +1,5 @@
-import { Response, Request, NextFunction } from "express";
-import HttpError from "../../domain/constant/HttpError";
+import { Response, Request, NextFunction } from 'express';
+import HttpError from '../../domain/constant/HttpError';
 
 export default (err: any, _req: Request, res: Response, _next: NextFunction) => {
   if (err instanceof HttpError) {

@@ -1,5 +1,5 @@
-import userModel from "../../../infra/model/userModel";
-import User from "../../entity/User";
+import userModel from '../../../infra/model/userModel';
+import User from '../../entity/User';
 
 export default class FindUser {
   public async execute(id: string): Promise<User> {
