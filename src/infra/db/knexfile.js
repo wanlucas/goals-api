@@ -8,7 +8,6 @@ module.exports = {
     database: 'goals',
   },
   migrations: {
-    extension: 'ts',
     directory: './migrations',
     tableName: 'migrations_history',
   }
