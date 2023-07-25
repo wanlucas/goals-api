@@ -1,6 +1,6 @@
 import User from '../../entity/User';
-import CreateUser from './CreateUser';
-import FindUser from './FindUser';
+import Create from './Create';
+import FindOne from './FindOne';
 
 class UserUseCase {
   constructor(
@@ -10,6 +10,6 @@ class UserUseCase {
 }
 
 export default new UserUseCase(
-  new FindUser().execute,
-  new CreateUser().execute,
+  new FindOne().execute,
+  new Create().execute,
 );

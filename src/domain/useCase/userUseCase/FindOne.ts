@@ -1,7 +1,7 @@
 import userModel from '../../../infra/model/userModel';
 import User from '../../entity/User';
 
-export default class FindUser {
+export default class FindOne {
   public async execute(id: string): Promise<User> {
     const payload = await userModel.findOne(id);
 
