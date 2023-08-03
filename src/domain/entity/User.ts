@@ -8,7 +8,7 @@ const userSchema = Joi.object({
 });
 
 export interface IUser extends IEntity {
-  name: any;
+  name: string;
   password: string;
 }
 
