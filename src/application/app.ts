@@ -3,6 +3,7 @@ import express from 'express';
 import errorHandler from './tool/errorHandler';
 
 import userRouter from './router/userRouter';
+import branchRouter from './router/branchRouter';
 import publicRouter from './router/publicRouter';
 
 import TokenValidator from './middleware/TokenValidator';
@@ -16,6 +17,7 @@ app.use('/public', publicRouter);
 app.use(TokenValidator.execute);
 
 app.use('/user', userRouter);
+app.use('/branch', branchRouter);
 
 app.use(errorHandler);
 

@@ -1,5 +1,6 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response, Request } from 'express';
 import { TokenPayload, validateToken } from '../tool/webToken';
+import { IRequest } from '../Interface';
 
 export default class TokenValidator {
   static async execute(req: Request, res: Response, next: NextFunction) {
@@ -9,7 +10,8 @@ export default class TokenValidator {
 
     try {
       const { id } = validateToken(token) as unknown as TokenPayload;
-      req.headers.userId = id;
+
+      (req as IRequest).user = { id };
   
       return next();
     } catch {

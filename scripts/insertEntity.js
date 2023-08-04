@@ -78,7 +78,7 @@ import ${entityName}, { I${entityName} } from '../../entity/${entityName}';
 import ${entity}Model from '../../../infra/model/${entity}Model';
 
 export default class FindById {
-  public async execute(id: string): Promise<${entityName}> {
+  public async execute(id: string) {
     const payload = await ${entity}Model.findById(id);
     return new ${entityName}(payload);
   }
@@ -88,14 +88,14 @@ export default class FindById {
 fs.writeFileSync(`./src/domain/useCase/${entity}UseCase/FindById.ts`, findByIdUseCaseTemplate);
 
 const useCaseIndexTemplate = `
-import ${entityName} from '../../entity/${entityName}';
+import ${entityName}, { I${entityName} } from '../../entity/${entityName}';
 import Create from './Create';
 import FindById from './FindById';
 
 class ${entityName}UseCase {
   constructor(
     public findById: (id: string) => Promise<${entityName}>,
-    public create: (body: any) => Promise<void>,
+    public create: (body: I${entityName}) => Promise<void>,
   ) { }
 }
 
@@ -128,7 +128,7 @@ import ${entityName} from '../../../domain/entity/${entityName}';
 import knex from '../../db/config';
   
 export default class FindById {
-  static async execute(id: string): Promise<${entityName}> {
+  static async execute(id: string): Promise<${entityName} | undefined> {
     return knex('${entityName}')
       .select('*')
       .where({ id })
@@ -146,7 +146,7 @@ import Create from './Create';
 
 class ${entityName}Model {
   constructor(
-    public findById: (id: string) => Promise<${entityName}>,
+    public findById: (id: string) => Promise<${entityName} | undefined>,
     public create: (${entity}: ${entityName}) => Promise<void>,
   ) { }
 }

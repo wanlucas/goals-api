@@ -5,13 +5,13 @@ const branchSchema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().min(3).max(30).required(),
   userId: Joi.string().uuid().required(),
-  xp: Joi.number().min(0).required(),
+  xp: Joi.number().min(0),
 });
 
 export interface IBranch extends IEntity {
   name: string;
   userId: string;
-  xp: number;
+  xp?: number;
 }
 
 export default class Branch extends Entity {
@@ -24,6 +24,6 @@ export default class Branch extends Entity {
 
     this.name = body.name;
     this.userId = body.userId;
-    this.xp = body.xp;
+    this.xp = body.xp || 0;
   }
 }
