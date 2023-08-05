@@ -7,7 +7,9 @@ export default class FindById {
   public async execute(id: string) {
     const user = await userModel.findById(id);
     
-    if (!user) throw new NotFoundError('Usuário não encontrado');
+    if (!user) {
+      throw new NotFoundError('Usuário não encontrado!');
+    }
 
     return new User(user);
   }

@@ -1,3 +1,3 @@
 export interface QueryOptions {
-  where: { [ḱey : string]: string | number };
+  where?: { [ḱey : string]: string | number };
 }

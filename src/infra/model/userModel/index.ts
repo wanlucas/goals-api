@@ -7,7 +7,7 @@ import { QueryOptions } from '../../interface';
 class UserModel {
   constructor(
     public findById: (id: string) => Promise<User | undefined>,
-    public findOne: (builder: QueryOptions) => Promise<User | undefined>,
+    public findOne: (builder?: QueryOptions) => Promise<User | undefined>,
     public create: (user: User) => Promise<void>,
   ) { }
 }

@@ -7,8 +7,8 @@ import { QueryOptions } from '../../interface';
 
 class BranchModel {
   constructor(
-    public findAll: (builder: QueryOptions) => Promise<Branch[]>,
-    public findById: (id: string) => Promise<Branch>,
+    public findAll: (builder?: QueryOptions) => Promise<Branch[]>,
+    public findById: (id: string) => Promise<Branch | undefined>,
     public create: (branch: Branch) => Promise<void>,
   ) { }
 }

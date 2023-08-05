@@ -4,6 +4,7 @@ import errorHandler from './tool/errorHandler';
 
 import userRouter from './router/userRouter';
 import branchRouter from './router/branchRouter';
+import goalRouter from './router/goalRouter';
 import publicRouter from './router/publicRouter';
 
 import TokenValidator from './middleware/TokenValidator';
@@ -18,6 +19,7 @@ app.use(TokenValidator.execute);
 
 app.use('/user', userRouter);
 app.use('/branch', branchRouter);
+app.use('/goal', goalRouter);
 
 app.use(errorHandler);
 

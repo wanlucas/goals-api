@@ -74,13 +74,18 @@ export default class Create {
 fs.writeFileSync(`./src/domain/useCase/${entity}UseCase/Create.ts`, createUseCaseTemplate);
 
 const findByIdUseCaseTemplate = `
-import ${entityName}, { I${entityName} } from '../../entity/${entityName}';
 import ${entity}Model from '../../../infra/model/${entity}Model';
+import { NotFoundError } from '../../constant/HttpError';
 
 export default class FindById {
   public async execute(id: string) {
-    const payload = await ${entity}Model.findById(id);
-    return new ${entityName}(payload);
+    const ${entity} = await ${entity}Model.findById(id);
+
+    if (!${entity}) {
+      throw new NotFoundError('${entityName} Not found!');
+    }
+
+    return ${entity};
   }
 }
 `;
@@ -94,7 +99,7 @@ import FindById from './FindById';
 
 class ${entityName}UseCase {
   constructor(
-    public findById: (id: string) => Promise<${entityName}>,
+    public findById: (id: string) => Promise<${entityName} | undefined>,
     public create: (body: I${entityName}) => Promise<void>,
   ) { }
 }

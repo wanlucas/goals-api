@@ -7,8 +7,8 @@ import FindAll from './FindAll';
 class BranchUseCase {
   constructor(
     public findAll: (userId: string) => Promise<Branch[]>,
-    public findById: (id: string) => Promise<Branch>,
-    public create: (body: IBranch) => Promise<void>,
+    public findById: (id: string) => Promise<Branch | undefined>,
+    public create: (userId: string, body: IBranch) => Promise<void>,
   ) { }
 }
 
