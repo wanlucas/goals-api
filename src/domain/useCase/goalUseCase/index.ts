@@ -12,8 +12,8 @@ class GoalUseCase {
   ) { }
 }
 
-export default new GoalUseCase(
-  new FindAll().execute,
-  new FindById().execute,
-  new Create().execute,
-);
+// export default new GoalUseCase(
+//   new FindAll().execute,
+//   new FindById().execute,
+//   new Create().execute,
+// );

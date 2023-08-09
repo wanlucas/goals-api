@@ -5,15 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon src/application/server.ts",
-    "knex:init": "knex init -x ts",
-    "knex:run": "knex --knexfile src/infra/db/knexfile.js",
-    "migrate:currentVersion": "npm run knex:run -- migrate:currentVersion",
-    "migrate:list": "npm run knex:run -- migrate:list",
-    "migrate:make": "npm run knex:run -- migrate:make --",
-    "migrate:latest": "npm run knex:run -- migrate:latest --debug",
-    "migrate:rollback": "npm run knex:run -- migrate:rollback --all --debug",
-    "seed:make": "npm run knex:run -- seed:make --",
-    "seed:run": "npm run knex:run -- seed:run --debug",
     "insertentity": "node ./scripts/insertEntity.js"
   },
   "keywords": [],
@@ -25,9 +16,9 @@
     "express-async-errors": "^3.1.1",
     "joi": "^17.9.2",
     "jsonwebtoken": "^9.0.1",
-    "knex": "^2.5.1",
     "mysql2": "^3.5.2",
     "nodemon": "^3.0.1",
+    "sequelize": "^6.32.1",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -39,6 +30,7 @@
     "@typescript-eslint/parser": "^5.54.1",
     "eslint": "^8.45.0",
     "eslint-config-xo": "^0.43.1",
-    "eslint-config-xo-typescript": "^0.56.0"
+    "eslint-config-xo-typescript": "^0.56.0",
+    "sequelize-cli": "^6.6.1"
   }
 }

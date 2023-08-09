@@ -1,5 +1,5 @@
 import User, { IUser } from '../../entity/User';
-import userModel from '../../../infra/model/userModel';
+import userModel from '../../../infra/model/UserModel';
 
 export default class Create {
   // TODO - Verificação de nomes repetidos

@@ -9,7 +9,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, async () => {
   try {
     console.log(`Listeaning on port ${PORT}!`);
-    await db.raw('SELECT 1');
+    await db.authenticate();
     console.log('DB is running!');
   } catch {
     console.log('DB is not running!');

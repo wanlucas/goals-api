@@ -11,16 +11,16 @@ import TokenValidator from './middleware/TokenValidator';
 
 const app = express();
 
-app.use(express.json());
+// app.use(express.json());
 
-app.use('/public', publicRouter);
+// app.use('/public', publicRouter);
 
-app.use(TokenValidator.execute);
+// app.use(TokenValidator.execute);
 
-app.use('/user', userRouter);
-app.use('/branch', branchRouter);
-app.use('/goal', goalRouter);
+// app.use('/user', userRouter);
+// app.use('/branch', branchRouter);
+// app.use('/goal', goalRouter);
 
-app.use(errorHandler);
+// app.use(errorHandler);
 
 export default app;

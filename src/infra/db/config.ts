@@ -1,16 +1,17 @@
-import dotenv from 'dotenv';
-import knex from 'knex';
+import 'dotenv/config';
+import { Sequelize } from 'sequelize';
 
-dotenv.config();
-
-export default knex({
-  client: 'mysql2',
-  connection: {
-    host: process.env.HOST,
-    port: 3306,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-  },
-  pool: { min: 0, max: 10 },
-});
+export default new Sequelize(
+  process.env.DB_NAME || 'goals',
+  process.env.DB_USER || 'root',
+  process.env.DB_PASSWORD,
+  {
+    dialect: 'mysql',
+    host: process.env.DB_HOST,
+    port: (process.env.DB_PORT as unknown as number) || 3306,
+    define: {
+      timestamps: true,
+      underscored: true,
+    },
+  }
+);
