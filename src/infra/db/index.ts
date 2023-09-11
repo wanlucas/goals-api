@@ -10,8 +10,8 @@ export default new Sequelize(
     host: process.env.DB_HOST,
     port: (process.env.DB_PORT as unknown as number) || 3306,
     define: {
-      timestamps: true,
-      underscored: true,
+      timestamps: false,
     },
+
   }
 );

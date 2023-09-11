@@ -1,6 +1,5 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db/config';
-import UserModel from './UserModel';
+import sequelize from '../db';
 import GoalModel from './GoalModel';
 
 export default class BranchModel extends Model {
@@ -37,11 +36,11 @@ BranchModel.init({
   sequelize,
 });
 
-BranchModel.belongsTo(UserModel, {
-  as: 'user',
-});
-
 BranchModel.hasMany(GoalModel, {
   foreignKey: 'branchId',
   as: 'goals',
+});
+
+GoalModel.belongsTo(BranchModel, {
+  as: 'branch',
 });

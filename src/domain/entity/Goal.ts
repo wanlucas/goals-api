@@ -5,7 +5,7 @@ const goalSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
   target: Joi.number().min(1).required(),
-  score: Joi.number().min(1).max(Joi.ref('target')),
+  score: Joi.number().min(0).max(Joi.ref('target')),
   difficulty: Joi.number().min(1).max(10).required(),
   branchId: Joi.string().uuid().required(),
 });

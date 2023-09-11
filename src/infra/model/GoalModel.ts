@@ -1,10 +1,13 @@
 import { DataTypes, Model } from 'sequelize';
-import sequelize from '../db/config';
-import BranchModel from './BranchModel';
+import sequelize from '../db';
 
 export default class GoalModel extends Model {
   declare id: string;
   declare name: string;
+  declare description: string;
+  declare target: number;
+  declare score: number;
+  declare difficulty: number;
   declare branchId: string;
   declare xp: number;
 }
@@ -42,8 +45,4 @@ GoalModel.init({
 }, {
   tableName: 'Goal',
   sequelize,
-});
-
-GoalModel.belongsTo(BranchModel, {
-  as: 'branch',
 });

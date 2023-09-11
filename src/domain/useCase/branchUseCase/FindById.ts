@@ -1,14 +1,15 @@
-// import branchModel from '../../../infra/model/branchModel';
-// import { NotFoundError } from '../../constant/HttpError';
+import branchModel from '../../../infra/model/BranchModel';
+import { NotFoundError } from '../../constant/HttpError';
+import Branch from '../../entity/Branch';
 
-// export default class FindById {
-//   public async execute(id: string) {
-//     const branch = await branchModel.findById(id);
+export default class FindById {
+  public async execute(id: string) {
+    const foundBranch = await branchModel.findByPk(id);
 
-//     if (!branch) {
-//       throw new NotFoundError('Branch não encontrada!');
-//     }
+    if (!foundBranch) {
+      throw new NotFoundError('Branch não encontrada!');
+    }
 
-//     return branch;
-//   }
-// }
+    return new Branch(foundBranch.dataValues);
+  }
+}

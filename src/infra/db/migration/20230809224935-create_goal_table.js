@@ -30,7 +30,7 @@ module.exports = {
           model: 'Branch',
           key: 'id'
         }
-      }
+      },
     });
   },
 

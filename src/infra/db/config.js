@@ -8,8 +8,7 @@ module.exports = {
   password: process.env.DB_PASSWORD,
   database:  process.env.DB_NAME || 'goals',
   define: {
-    timestamps: true,
-    underscored: true,
+    timestamps: false,
   }
 };
 

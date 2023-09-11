@@ -1,4 +1,4 @@
-import db from '../infra/db/config';
+import db from '../infra/db';
 import app from './app';
 import dotenv from 'dotenv';
 

@@ -5,6 +5,6 @@ export default class Create {
   // TODO - Verificação de nomes repetidos
   public async execute(body: IUser) {
     const user = new User(body);
-    await userModel.create(user);
+    await userModel.create({ ...user });
   }
 }

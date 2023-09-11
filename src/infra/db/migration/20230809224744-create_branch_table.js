@@ -23,7 +23,7 @@ module.exports = {
           model: 'User',
           key: 'id'
         }
-      }
+      },
     });
   },
 

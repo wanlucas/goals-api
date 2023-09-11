@@ -1,10 +1,17 @@
+import Branch, { IBranch } from '../../entity/Branch';
+import branchModel from '../../../infra/model/BranchModel';
+import UserModel from '../../../infra/model/UserModel';
+import { NotFoundError } from '../../constant/HttpError';
 
-// import Branch, { IBranch } from '../../entity/Branch';
-// import branchModel from '../../../infra/model/branchModel';
+export default class Create {
+  public async execute(userId: string, body: IBranch) {
+    const foundUser = await UserModel.findByPk(userId);
 
-// export default class Create {
-//   public async execute(userId: string, body: IBranch) {
-//     const branch = new Branch({ ...body, userId });
-//     await branchModel.create(branch);
-//   }
-// }
+    if (!foundUser) {
+      throw new NotFoundError('Usuário não encontrado!');
+    }
+
+    const branch = new Branch({ ...body, userId });
+    await branchModel.create({ ...branch });
+  }
+}
