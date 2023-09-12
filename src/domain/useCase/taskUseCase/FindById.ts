@@ -1,15 +1,17 @@
+import TaskModel from '../../../infra/model/TaskModel';
+import { NotFoundError } from '../../constant/HttpError';
+import Task from '../../entity/Task';
 
-// import taskModel from '../../../infra/model/taskModel';
-// import { NotFoundError } from '../../constant/HttpError';
+export default class FindById {
+  public async execute(id: string) {
+    const foundTask = await TaskModel.findByPk(id);
 
-// export default class FindById {
-//   public async execute(id: string) {
-//     const task = await taskModel.findById(id);
+    if (!foundTask) {
+      throw new NotFoundError('Tarefa não encontrada!');
+    }
 
-//     if (!task) {
-//       throw new NotFoundError('Task Not found!');
-//     }
+    const taskData = foundTask.get();
 
-//     return task;
-//   }
-// }
+    return new Task({ ...taskData, days: JSON.parse(taskData.days) });
+  }
+}

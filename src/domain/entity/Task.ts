@@ -1,29 +1,42 @@
 
 import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
-import Goal from './Goal';
 
 const taskSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
-  days: Joi.array().items(Joi.number().min(0).max(6)).required(),
+  days: Joi.array().min(1).items(Joi.number().min(0).max(6)).required(),
   goalId: Joi.string().uuid().required(),
-  goalTarget: Joi.number().min(1).required(),
+  duration: Joi.number().allow(null),
+  quantity: Joi.number().allow(null),
+  endDate: Joi.date(),
 });
 
 export interface ITask extends IEntity {
   description: string;
-  endDate: Date;
+  days: number[];
+  goalId: string;
+  endDate?: Date;
+  duration?: number;
+  quantity?: number;
 }
 
 export default class Task extends Entity {
   public readonly description: string;
   public readonly goalId: string;
+  public readonly days: number[];
+  public readonly endDate?: Date;
+  public readonly duration?: number;
+  public readonly quantity?: number;
 
-  public constructor (body: ITask, goal: Goal) {
-    super({ ...body, goalId: goal.id, goalTarget: goal.target }, taskSchema);
+  public constructor (body: ITask) {
+    super(body, taskSchema);
 
     this.description = body.description;
-    this.goalId = goal.id;
+    this.goalId = body.goalId;
+    this.endDate = body.endDate;
+    this.days = body.days;
+    this.duration = body.duration;
+    this.quantity = body.quantity;
   }
 }

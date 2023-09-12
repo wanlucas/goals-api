@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db';
+import TaskModel from './TaskModel';
 
 export default class GoalModel extends Model {
   declare id: string;
@@ -45,4 +46,14 @@ GoalModel.init({
 }, {
   tableName: 'Goal',
   sequelize,
+});
+
+GoalModel.hasMany(TaskModel, {
+  foreignKey: 'goalId',
+  as: 'tasks',
+});
+
+TaskModel.belongsTo(GoalModel, {
+  foreignKey: 'goalId',
+  as: 'goal',
 });
