@@ -24,6 +24,10 @@ module.exports = {
           key: 'id'
         }
       },
+      icon: {
+        type: Sequelize.STRING,
+        allowNull: false
+      }
     });
   },
 

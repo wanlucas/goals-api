@@ -7,6 +7,7 @@ export default class BranchModel extends Model {
   declare name: string;
   declare userId: string;
   declare xp: number;
+  declare icon: string;
 }
 
 BranchModel.init({
@@ -30,7 +31,11 @@ BranchModel.init({
   xp: {
     type: DataTypes.FLOAT,
     allowNull: false,
-  }
+  },
+  icon: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 }, {
   tableName: 'Branch',
   sequelize,
