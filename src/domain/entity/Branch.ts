@@ -5,10 +5,7 @@ const branchSchema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().min(3).max(30).required(),
   userId: Joi.string().uuid().required(),
-  icon: Joi.alternatives().try(
-    Joi.string().regex(/^ic\//).max(7),
-    Joi.string().min(7).max(10000).base64()
-  ).required(),
+  icon: Joi.string().max(10).required(),
   xp: Joi.number().min(0),
 });
 
