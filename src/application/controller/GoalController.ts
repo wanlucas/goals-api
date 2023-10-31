@@ -18,6 +18,13 @@ export default class GoalController {
     return res.status(200).json(output);
   }
 
+  static async findByBranchId(req: Request, res: Response) {
+    const { branchId } = req.params;
+    const output = await goalUseCase.findByBranchId(branchId);
+
+    return res.status(200).json(output);
+  }
+
   static async create(req: Request, res: Response) {
     const { user } = (req as IRequest);
     const output = await goalUseCase.create(user.id, req.body);

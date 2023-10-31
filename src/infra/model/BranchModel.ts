@@ -8,6 +8,7 @@ export default class BranchModel extends Model {
   declare userId: string;
   declare xp: number;
   declare icon: string;
+  declare goals: GoalModel[];
 }
 
 BranchModel.init({

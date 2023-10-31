@@ -5,7 +5,6 @@ export default class TaskModel extends Model {
   declare id: string;
   declare description: string;
   declare goalId: string;
-  declare days: string;
   declare endDate?: Date;
   declare quantity?: number;
   declare duration?: number;
@@ -18,10 +17,6 @@ TaskModel.init({
     allowNull: false,
   },
   description: {
-    type: DataTypes.STRING,
-    allowNull: false,
-  },
-  days: {
     type: DataTypes.STRING,
     allowNull: false,
   },

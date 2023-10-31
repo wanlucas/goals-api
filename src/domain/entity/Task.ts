@@ -5,7 +5,7 @@ import Joi from 'joi';
 const taskSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
-  days: Joi.array().min(1).items(Joi.number().min(0).max(6)).required(),
+  // days: Joi.array().min(1).items(Joi.number().min(0).max(6)).required(),
   goalId: Joi.string().uuid().required(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
@@ -14,7 +14,6 @@ const taskSchema = Joi.object({
 
 export interface ITask extends IEntity {
   description: string;
-  days: number[];
   goalId: string;
   endDate?: Date;
   duration?: number;
@@ -24,7 +23,6 @@ export interface ITask extends IEntity {
 export default class Task extends Entity {
   public readonly description: string;
   public readonly goalId: string;
-  public readonly days: number[];
   public readonly endDate?: Date;
   public readonly duration?: number;
   public readonly quantity?: number;
@@ -35,7 +33,6 @@ export default class Task extends Entity {
     this.description = body.description;
     this.goalId = body.goalId;
     this.endDate = body.endDate;
-    this.days = body.days;
     this.duration = body.duration;
     this.quantity = body.quantity;
   }

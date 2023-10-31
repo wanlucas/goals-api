@@ -1,14 +1,22 @@
 import { IBranch } from '../../entity/Branch';
-import Create from './Create';
-import FindById from './FindById';
 import FindAll from './FindAll';
+import FindById from './FindById';
+import Create from './Create';
 import Update from './Update';
 import Remove from './Remove';
+import { IGoal } from '../../entity/Goal';
+import { ITask } from '../../entity/Task';
+
+export interface IBranchWithGoalsAndTasks extends IBranch {
+  goals: (Partial<IGoal> & {
+    tasks: Partial<ITask>[];
+  })[];
+}
 
 class BranchUseCase {
   constructor(
     public findAll: (userId: string) => Promise<IBranch[]>,
-    public findById: (id: string) => Promise<IBranch | undefined>,
+    public findById: (id: string) => Promise<IBranchWithGoalsAndTasks | undefined>,
     public create: (userId: string, body: IBranch) => Promise<void>,
     public update: (id: string, body: Partial<IBranch>) => Promise<void>,
     public remove: (id: string) => Promise<void>,

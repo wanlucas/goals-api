@@ -12,10 +12,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      days: {
-        type: Sequelize.STRING,
-        allowNull: false,
-      },
       goalId: {
         type: Sequelize.UUID,
         allowNull: false,

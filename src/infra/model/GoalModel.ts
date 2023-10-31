@@ -11,6 +11,7 @@ export default class GoalModel extends Model {
   declare difficulty: number;
   declare branchId: string;
   declare xp: number;
+  declare tasks: TaskModel[];
 }
 
 GoalModel.init({

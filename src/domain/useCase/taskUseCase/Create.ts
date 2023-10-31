@@ -13,6 +13,6 @@ export default class Create {
     }
 
     const task = new Task(body);
-    await TaskModel.create({ ...task, days: JSON.stringify(task.days) });
+    await TaskModel.create({ ...task });
   }
 }
