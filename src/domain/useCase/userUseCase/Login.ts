@@ -1,11 +1,11 @@
+import db from '../../../infra/db';
 import { ILogin } from '.';
 import { createToken } from '../../../application/tool/webToken';
-import userModel from '../../../infra/model/UserModel';
 import { UnauthorizedError } from '../../constant/HttpError';
 
 export default class Login {
   public async execute(payload: ILogin) {
-    const foundUser = await userModel.findOne({
+    const foundUser = await db.user.findUnique({
       where: {
         name: payload.name,
         password: payload.password,
@@ -15,7 +15,7 @@ export default class Login {
     if (!foundUser) throw new UnauthorizedError('Credenciais inválidas');
 
     return { 
-      token: createToken(foundUser.dataValues),
+      token: createToken(foundUser),
       id: foundUser.id,
     };
   }

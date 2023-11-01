@@ -1,16 +1,13 @@
-import branchModel from '../../../infra/model/BranchModel';
-import Branch from '../../entity/Branch';
+import db from '../../../infra/db';
 
 export default class FindAll {
   public async execute(userId: string) {
-    const foundBranchs = await branchModel.findAll({
+    const foundBranchs = await db.branch.findMany({
       where: {
         userId,
       }
     });
 
-    return foundBranchs.map(({ dataValues }) =>
-      new Branch(dataValues)
-    );
+    return foundBranchs;
   }
 }

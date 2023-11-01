@@ -1,4 +1,4 @@
-import GoalModel from '../../../infra/model/GoalModel';
+import db from '../../../infra/db';
 import Goal from '../../entity/Goal';
 
 export default class FindAll {

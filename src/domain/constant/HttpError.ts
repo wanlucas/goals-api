@@ -25,6 +25,12 @@ export class NotFoundError extends HttpError {
   }
 }
 
+export class ConflictError extends HttpError {
+  constructor(message: string) {
+    super(message, 409);
+  }
+}
+
 export class UnprocessableEntityError extends HttpError {
   constructor(message: string) {
     super(message, 422);

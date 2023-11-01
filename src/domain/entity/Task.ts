@@ -34,7 +34,7 @@ export default class Task extends Entity {
 
     this.description = body.description;
     this.goalId = body.goalId;
-    this.endDate = body.endDate;
+    this.endDate = body.endDate && new Date(body.endDate);
     this.duration = body.duration;
     this.quantity = body.quantity;
     this.days = body.days;

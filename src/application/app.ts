@@ -18,7 +18,7 @@ app.use('/public', publicRouter);
 
 app.use(TokenValidator.execute);
 
-app.use('/user', userRouter);
+// app.use('/user', userRouter);
 app.use('/branch', branchRouter);
 app.use('/goal', goalRouter);
 app.use('/task', taskRouter);

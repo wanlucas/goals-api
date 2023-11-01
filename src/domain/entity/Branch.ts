@@ -5,7 +5,7 @@ const branchSchema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().min(3).max(30).required(),
   userId: Joi.string().uuid().required(),
-  icon: Joi.string().max(10).required(),
+  icon: Joi.string().max(10),
   xp: Joi.number().min(0),
 });
 
@@ -20,7 +20,7 @@ export default class Branch extends Entity {
   public readonly name: string;
   public readonly userId: string;
   public readonly xp: number;
-  public readonly icon?: string;
+  public readonly icon?: string | null;
 
   public constructor (body: IBranch) {
     super(body, branchSchema);

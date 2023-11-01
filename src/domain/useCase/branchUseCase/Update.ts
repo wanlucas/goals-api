@@ -1,4 +1,4 @@
-import BranchModel from '../../../infra/model/BranchModel';
+
 import { NotFoundError } from '../../constant/HttpError';
 import Branch, { IBranch } from '../../entity/Branch';
 

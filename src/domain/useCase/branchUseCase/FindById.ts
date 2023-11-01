@@ -1,35 +1,29 @@
 import { IBranchWithGoalsAndTasks } from '.';
-import branchModel from '../../../infra/model/BranchModel';
+import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
-import sequelize from 'sequelize';
 
 export default class FindById {
-  public async execute(id: string): Promise<IBranchWithGoalsAndTasks> {
-    const foundBranch = await branchModel.findByPk(id, {
-      include: [{
-        association: 'goals',
-        attributes: {
-          exclude: ['branchId'],
+  public async execute(id: string): Promise<any> {
+    const foundBranch = await db.branch.findUnique({
+      where: {
+        id,
+      },
+      include: {
+        goals: {
+          include: {
+            tasks: {
+              select: {
+                id: true,
+                days: {
+                  select: {
+                    day: true,
+                  }
+                }
+              }
+            },
+          },
         },
-        include: [{
-          association: 'tasks',
-          attributes: {
-            exclude: ['goalId'],
-          },
-          required: false,
-          where: {
-            endDate: {
-              [sequelize.Op.gte]: new Date(),
-            }
-          },
-          include: [{
-            association: 'days',
-            attributes: [
-              [sequelize.fn('GROUP_CONCAT', sequelize.col('day')), 'days'],
-            ],
-          }],
-        }],
-      }]
+      }
     });
 
     if (!foundBranch) {
