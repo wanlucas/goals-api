@@ -1,6 +1,5 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-
   async up (queryInterface, Sequelize) {
     queryInterface.createTable('Task', {
       id: {
@@ -18,7 +17,9 @@ module.exports = {
         references: {
           model: 'Goal',
           key: 'id',
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       endDate: {
         type: Sequelize.DATE,

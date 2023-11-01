@@ -22,11 +22,17 @@ module.exports = {
         references: {
           model: 'User',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
       icon: {
         type: Sequelize.STRING,
         allowNull: false
+      },
+      deletedAt: {
+        type: Sequelize.DATE,
+        allowNull: true
       }
     });
   },

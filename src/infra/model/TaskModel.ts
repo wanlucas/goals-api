@@ -1,5 +1,6 @@
 import { DataTypes, Model } from 'sequelize';
 import sequelize from '../db';
+import TaskDayModel from './TaskDayModel';
 
 export default class TaskModel extends Model {
   declare id: string;
@@ -43,5 +44,15 @@ TaskModel.init({
 },  {
   tableName: 'Task',
   sequelize,
+});
+
+TaskModel.hasMany(TaskDayModel, {
+  foreignKey: 'taskId',
+  as: 'days',
+});
+
+TaskDayModel.belongsTo(TaskModel, {
+  foreignKey: 'taskId',
+  as: 'task',
 });
 

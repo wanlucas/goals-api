@@ -29,7 +29,9 @@ module.exports = {
         references: {
           model: 'Branch',
           key: 'id'
-        }
+        },
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       },
     });
   },
