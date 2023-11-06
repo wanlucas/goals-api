@@ -13,17 +13,17 @@ const taskSchema = Joi.object({
   runAt: Joi.array()
     .when('frequency', {
       is: 'daily',
-      then: Joi.forbidden(),
+      then: Joi.valid(null),
     })
     .when('frequency', {
       is: 'weekly',
-      then: Joi.array().items(Joi.number().min(1).max(7)),
+      then: Joi.array().items(Joi.number().min(0).max(6)),
     })
     .when('frequency', {
       is: 'monthly',
       then: Joi.array().items(Joi.number().min(1).max(31)),
-    }),
-});
+    }), 
+}).strict(false);
 
 export interface ITask extends IEntity {
   description: string;

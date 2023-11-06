@@ -14,7 +14,7 @@ export default abstract class Entity {
   public readonly id: string;
 
   constructor(body: IBody, schema: Joi.ObjectSchema) {
-    const { error } = schema.validate(body);
+    const { error } = schema.validate(body, { allowUnknown: true });
 
     if (error) {
       throw new UnprocessableEntityError(error.message);
