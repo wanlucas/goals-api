@@ -3,7 +3,7 @@ import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 
 export default class FindById {
-  public async execute(id: string): Promise<any> {
+  public async execute(id: string): Promise<IBranchWithGoalsAndTasks> {
     const foundBranch = await db.branch.findUnique({
       where: {
         id,
@@ -11,19 +11,10 @@ export default class FindById {
       include: {
         goals: {
           include: {
-            tasks: {
-              select: {
-                id: true,
-                days: {
-                  select: {
-                    day: true,
-                  }
-                }
-              }
-            },
+            tasks: true,
           },
         },
-      }
+      },
     });
 
     if (!foundBranch) {

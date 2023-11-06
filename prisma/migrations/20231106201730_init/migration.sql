@@ -16,7 +16,7 @@ CREATE TABLE `Branch` (
     `id` VARCHAR(191) NOT NULL,
     `name` VARCHAR(191) NOT NULL,
     `userId` VARCHAR(191) NOT NULL,
-    `icon` VARCHAR(191) NULL,
+    `icon` VARCHAR(191) NOT NULL,
     `xp` INTEGER NOT NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
@@ -47,20 +47,13 @@ CREATE TABLE `Task` (
     `goalId` VARCHAR(191) NOT NULL,
     `duration` INTEGER NULL,
     `quantity` INTEGER NULL,
-    `endDate` DATETIME(3) NULL,
     `createdAt` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `updatedAt` DATETIME(3) NOT NULL,
+    `frequency` VARCHAR(191) NOT NULL,
+    `time` VARCHAR(191) NULL,
+    `runAt` JSON NULL,
 
     PRIMARY KEY (`id`)
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- CreateTable
-CREATE TABLE `TaskDay` (
-    `taskId` VARCHAR(191) NOT NULL,
-    `day` INTEGER NOT NULL,
-
-    INDEX `TaskDay_taskId_idx`(`taskId`),
-    PRIMARY KEY (`taskId`, `day`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 -- AddForeignKey
@@ -71,6 +64,3 @@ ALTER TABLE `Goal` ADD CONSTRAINT `Goal_branchId_fkey` FOREIGN KEY (`branchId`) 
 
 -- AddForeignKey
 ALTER TABLE `Task` ADD CONSTRAINT `Task_goalId_fkey` FOREIGN KEY (`goalId`) REFERENCES `Goal`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE `TaskDay` ADD CONSTRAINT `TaskDay_taskId_fkey` FOREIGN KEY (`taskId`) REFERENCES `Task`(`id`) ON DELETE CASCADE ON UPDATE CASCADE;

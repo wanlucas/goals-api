@@ -20,7 +20,7 @@ export default class Branch extends Entity {
   public readonly name: string;
   public readonly userId: string;
   public readonly xp: number;
-  public readonly icon?: string | null;
+  public readonly icon: string;
 
   public constructor (body: IBranch) {
     super(body, branchSchema);
@@ -28,6 +28,6 @@ export default class Branch extends Entity {
     this.name = body.name;
     this.userId = body.userId;
     this.xp = body.xp || 0;
-    this.icon = body.icon;
+    this.icon = body.icon || '1';
   }
 }

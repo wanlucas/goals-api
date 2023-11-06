@@ -4,7 +4,7 @@ import Task, { ITask } from '../../entity/Task';
 
 export default class Create {
   public async execute(body: ITask) {
-    const { days, ...task } = new Task(body);
+    const task = new Task(body);
     const foundGoal = await db.goal.findUnique({
       where: {
         id: task.goalId,
@@ -16,12 +16,7 @@ export default class Create {
     }
 
     await db.task.create({
-      data: {
-        ...task,
-        days: {
-          create: days.map((day) => ({ day })),
-        },
-      },
+      data: task,
     });
   }
 }

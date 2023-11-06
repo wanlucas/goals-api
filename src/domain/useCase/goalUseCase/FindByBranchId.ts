@@ -1,10 +1,8 @@
-import GoalModel from '../../../infra/model/GoalModel';
-import Goal from '../../entity/Goal';
+import db from '../../../infra/db';
 
 export default class FindByBranchId {
   public async execute(branchId: string) {
-    const foundGoals = await GoalModel.findAll({ where: { branchId } });
-
-    return foundGoals.map(({ dataValues }) => new Goal(dataValues));
+    const foundGoals = await db.goal.findMany({ where: { branchId } });
+    return foundGoals;
   }
 }

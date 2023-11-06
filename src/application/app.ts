@@ -9,7 +9,6 @@ import publicRouter from './router/publicRouter';
 import taskRouter from './router/taskRouter';
 
 import TokenValidator from './middleware/TokenValidator';
-// TODO - onDelete nas rotas
 const app = express();
 
 app.use(express.json());
@@ -18,7 +17,7 @@ app.use('/public', publicRouter);
 
 app.use(TokenValidator.execute);
 
-// app.use('/user', userRouter);
+app.use('/user', userRouter);
 app.use('/branch', branchRouter);
 app.use('/goal', goalRouter);
 app.use('/task', taskRouter);
