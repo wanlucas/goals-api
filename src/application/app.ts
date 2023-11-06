@@ -9,7 +9,6 @@ import publicRouter from './router/publicRouter';
 import taskRouter from './router/taskRouter';
 
 import TokenValidator from './middleware/TokenValidator';
-// TODO - onDelete nas rotas
 const app = express();
 
 app.use(express.json());

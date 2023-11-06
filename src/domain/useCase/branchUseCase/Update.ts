@@ -1,19 +1,27 @@
-import BranchModel from '../../../infra/model/BranchModel';
+import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 import Branch, { IBranch } from '../../entity/Branch';
 
 export default class Update {
-  // TODO impedir atualização de xp
   public async execute(id: string, body: Partial<IBranch>) {
-    const foundBranch = await BranchModel.findByPk(id);
+    const foundBranch = await db.branch.findUnique({
+      where: {
+        id,
+      }
+    });
 
 
     if (!foundBranch) {
       throw new NotFoundError('Branch não encontrada!');
     }
 
-    const branch = new Branch({ ...foundBranch.dataValues, ...body });
+    const { xp: _, ...branch } = new Branch({ ...foundBranch, ...body });
 
-    await BranchModel.update(branch, { where: { id } });
+    await db.branch.update({
+      where: {
+        id,
+      },
+      data: branch,
+    });
   }
 }

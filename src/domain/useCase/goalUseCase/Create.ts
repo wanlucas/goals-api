@@ -1,26 +1,35 @@
 
+import db from '../../../infra/db';
 import Goal, { IGoal } from '../../entity/Goal';
-import branchUseCase from '../branchUseCase';
 import { NotFoundError, UnauthorizedError } from '../../constant/HttpError';
-import GoalModel from '../../../infra/model/GoalModel';
-import UserModel from '../../../infra/model/UserModel';
 
 export default class Create {
   public async execute(userId: string, body: IGoal) {
-    const foundUser = await UserModel.findByPk(userId);
+    const goal = new Goal(body);
+    const foundUser = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
 
     if (!foundUser) {
       throw new NotFoundError('Usuário não encontrado!');
     }
 
-    const foundBranch = await branchUseCase.findById(body.branchId);
+    const foundBranch = await db.branch.findUnique({
+      where: {
+        id: goal.branchId,
+      },
+    });
+
+    if (!foundBranch) {
+      throw new NotFoundError('Branch não encontrada!');
+    }
     
-    if (foundBranch?.userId !== userId) {
+    if (foundBranch.userId !== userId) {
       throw new UnauthorizedError('Usuário não autorizado!');
     }
 
-    const goal = new Goal(body);
-
-    await GoalModel.create({ ...goal });
+    await db.goal.create({ data: goal });
   }
 }

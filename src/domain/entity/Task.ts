@@ -5,35 +5,54 @@ import Joi from 'joi';
 const taskSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
-  // days: Joi.array().min(1).items(Joi.number().min(0).max(6)).required(),
   goalId: Joi.string().uuid().required(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
-  endDate: Joi.date(),
+  frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
+  time: Joi.string().length(8).required(),
+  runAt: Joi.array()
+    .when('frequency', {
+      is: 'daily',
+      then: Joi.forbidden(),
+    })
+    .when('frequency', {
+      is: 'weekly',
+      then: Joi.array().items(Joi.number().min(1).max(7)),
+    })
+    .when('frequency', {
+      is: 'monthly',
+      then: Joi.array().items(Joi.number().min(1).max(31)),
+    }),
 });
 
 export interface ITask extends IEntity {
   description: string;
   goalId: string;
-  endDate?: Date;
-  duration?: number;
-  quantity?: number;
+  duration: number | null;
+  quantity: number | null;
+  time: string | null;
+  frequency: string;
+  runAt: any;
 }
 
 export default class Task extends Entity {
   public readonly description: string;
   public readonly goalId: string;
-  public readonly endDate?: Date;
-  public readonly duration?: number;
-  public readonly quantity?: number;
+  public readonly duration: number | null;
+  public readonly quantity: number | null;
+  public readonly frequency: string;
+  public readonly time: string | null;
+  public readonly runAt?: number[];
 
   public constructor (body: ITask) {
     super(body, taskSchema);
 
     this.description = body.description;
     this.goalId = body.goalId;
-    this.endDate = body.endDate;
-    this.duration = body.duration;
-    this.quantity = body.quantity;
+    this.frequency = body.frequency;
+    this.time = body.time;
+    this.duration = body.duration || null;
+    this.quantity = body.quantity || null;
+    this.runAt = body.runAt || null;
   }
 }

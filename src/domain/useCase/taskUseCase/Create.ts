@@ -1,18 +1,22 @@
-
-import GoalModel from '../../../infra/model/GoalModel';
-import TaskModel from '../../../infra/model/TaskModel';
+import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 import Task, { ITask } from '../../entity/Task';
 
 export default class Create {
   public async execute(body: ITask) {
-    const foundGoal = await GoalModel.findOne({ where: { id: body.goalId } });
+    const task = new Task(body);
+    const foundGoal = await db.goal.findUnique({
+      where: {
+        id: task.goalId,
+      },
+    });
 
     if (!foundGoal) {
       throw new NotFoundError('Meta não encontrada');
     }
 
-    const task = new Task(body);
-    await TaskModel.create({ ...task });
+    await db.task.create({
+      data: task,
+    });
   }
 }

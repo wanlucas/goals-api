@@ -1,10 +1,19 @@
 import User, { IUser } from '../../entity/User';
-import userModel from '../../../infra/model/UserModel';
+import db from '../../../infra/db';
+import { ConflictError } from '../../constant/HttpError';
 
 export default class Create {
-  // TODO - Verificação de nomes repetidos
   public async execute(body: IUser) {
     const user = new User(body);
-    await userModel.create({ ...user });
+
+    const userAlreadyExists = await db.user.findUnique({
+      where: { name: body.name }
+    });
+
+    if (userAlreadyExists) {
+      throw new ConflictError('Usuário já existe!');
+    }
+
+    await db.user.create({ data: user });
   }
 }
