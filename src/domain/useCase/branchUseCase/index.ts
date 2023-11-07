@@ -9,7 +9,7 @@ import Task from '../../entity/Task';
 
 export interface IBranchWithGoalsAndTasks extends Branch {
   goals: (Partial<Goal> & {
-    tasks: (Partial<Omit<Task, 'runAt'>> & { runAt: any })[];
+    tasks: Partial<Task>[];
   })[];
 }
 

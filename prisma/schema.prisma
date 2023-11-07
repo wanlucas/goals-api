@@ -49,15 +49,24 @@ model Goal {
 }
 
 model Task {
-  id          String   @id @default(uuid())
+  id          String       @id @default(uuid())
   description String
   goalId      String
   duration    Int?
   quantity    Int?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
   frequency   String
   time        String?
   runAt       Json?
-  goal        Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  goal        Goal         @relation(fields: [goalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  records     TaskRecord[]
+}
+
+model TaskRecord {
+  taskId String
+  date   String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@id([taskId, date])
 }

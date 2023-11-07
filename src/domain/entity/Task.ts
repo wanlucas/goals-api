@@ -23,7 +23,7 @@ const taskSchema = Joi.object({
       is: 'monthly',
       then: Joi.array().items(Joi.number().min(1).max(31)),
     }), 
-}).strict(false);
+});
 
 export interface ITask extends IEntity {
   description: string;
@@ -42,7 +42,7 @@ export default class Task extends Entity {
   public readonly quantity: number | null;
   public readonly frequency: string;
   public readonly time: string | null;
-  public readonly runAt?: number[];
+  public readonly runAt?: any;
 
   public constructor (body: ITask) {
     super(body, taskSchema);
