@@ -9,7 +9,7 @@ const taskSchema = Joi.object({
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
-  time: Joi.string().length(8).required(),
+  time: Joi.string().length(5),
   runAt: Joi.array()
     .when('frequency', {
       is: 'daily',

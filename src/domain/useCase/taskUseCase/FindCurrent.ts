@@ -10,7 +10,9 @@ export default class FindCurrent {
       include: {
         records: {
           where: {
-            date: moment().format('YYYY-MM-DD'),
+            date: {
+              
+            }
           },
         },
       },
@@ -39,7 +41,10 @@ export default class FindCurrent {
         ],
       },
       orderBy: {
-        time: 'asc',
+        time: {
+          sort: 'asc',
+          nulls: 'last'
+        }
       },
     });
 

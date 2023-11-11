@@ -69,4 +69,5 @@ model TaskRecord {
   task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   @@id([taskId, date])
+  @@index([date])
 }
