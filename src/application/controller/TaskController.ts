@@ -35,4 +35,11 @@ export default class TaskController {
 
     return res.status(200).json(output);
   }
+
+  static async updateRecord(req: Request, res: Response) {
+    const { id } = req.params;
+    const output = await taskUseCase.updateRecord(id, req.body);
+
+    return res.status(200).json(output);
+  }
 }
