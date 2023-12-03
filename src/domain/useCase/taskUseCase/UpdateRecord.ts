@@ -26,7 +26,9 @@ export default class UpdateRecord {
     if (!foundTask) throw new Error('Task not found');
   
     const foundRecord = foundTask?.records[0] || {};
+
     const task = new Task(foundTask);
+
     const taskRecord = task.createRecord({
       ...foundRecord,
       ...record,
