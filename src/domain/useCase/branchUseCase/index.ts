@@ -17,7 +17,7 @@ class BranchUseCase {
   constructor(
     public findAll: (userId: string) => Promise<Branch[]>,
     public findById: (id: string) => Promise<IBranchWithGoalsAndTasks | null>,
-    public create: (userId: string, body: IBranch) => Promise<void>,
+    public create: (userId: string, body: IBranch) => Promise<Branch>,
     public update: (id: string, body: Partial<IBranch>) => Promise<void>,
     public remove: (id: string) => Promise<void>,
   ) { }

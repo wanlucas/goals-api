@@ -28,5 +28,7 @@ export default class Create {
     }
 
     await db.branch.create({ data: branch });
+
+    return branch;
   }
 }
