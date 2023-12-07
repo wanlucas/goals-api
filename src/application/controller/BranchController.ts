@@ -25,17 +25,17 @@ export default class BranchController {
     return res.status(201).json(output);
   }
 
-  // static async update(req: Request, res: Response) {
-  //   const { id } = req.params;
-  //   const output = await branchUseCase.update(id, req.body);
+  static async update(req: Request, res: Response) {
+    const { id } = req.params;
+    const output = await branchUseCase.update(id, req.body);
 
-  //   return res.status(200).json(output);
-  // }
+    return res.status(200).json(output);
+  }
 
-  // static async remove(req: Request, res: Response) {
-  //   const { id } = req.params;
-  //   const output = await branchUseCase.remove(id);
+  static async remove(req: Request, res: Response) {
+    const { id } = req.params;
+    const output = await branchUseCase.remove(id);
 
-  //   return res.status(200).json(output);
-  // }
+    return res.status(200).json(output);
+  }
 }

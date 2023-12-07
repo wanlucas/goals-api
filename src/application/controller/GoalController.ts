@@ -28,6 +28,7 @@ export default class GoalController {
   static async bulkCreate(req: Request, res: Response) {
     const { user } = (req as IRequest);
     const { branchId, goals } = req.body;
+
     const output = await goalUseCase.bulkCreate(user.id, branchId, goals);
 
     return res.status(201).json(output);
@@ -38,5 +39,13 @@ export default class GoalController {
     const output = await goalUseCase.create(user.id, req.body);
 
     return res.status(201).json(output);
+  }
+
+  static async bulkDelete(req: Request, res: Response) {
+    const { user } = (req as IRequest);
+    const { ids } = req.body;
+    const output = await goalUseCase.bulkDelete(user.id, ids);
+
+    return res.status(200).json(output);
   }
 }

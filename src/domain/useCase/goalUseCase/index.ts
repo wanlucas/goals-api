@@ -6,6 +6,7 @@ import Create from './Create';
 import FindAll from './FindAll';
 import BulkCreate from './BulkCreate';
 import FindByBranchId from './FindByBranchId';
+import bulkDelete from './BulkDelete';
 
 export type ICreateGoal =  Omit<IGoal, 'score' | 'branchId'>
 
@@ -16,6 +17,7 @@ class GoalUseCase {
     public bulkCreate: (userId: string, branchId: string, goals: ICreateGoal[]) => Promise<void>,
     // public findById: (id: string) => Promise<IGoal | undefined>,
     public create: (userId: string, body: IGoal) => Promise<void>,
+    public bulkDelete: (userId: string, ids: string[]) => Promise<void>,
   ) { }
 }
 
@@ -25,4 +27,5 @@ export default new GoalUseCase(
   new BulkCreate().execute,
   // new FindById().execute,
   new Create().execute,
+  new bulkDelete().execute,
 );
