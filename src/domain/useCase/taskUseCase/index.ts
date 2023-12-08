@@ -1,21 +1,23 @@
-import Task, { ITask } from '../../entity/Task';
+import Task, { ITask, TaskRecord } from '../../entity/Task';
 import Create from './Create';
 import Done from './Done';
 import Undone from './Undone';
 import FindCurrent from './FindCurrent';
 import FindById from './FindById';
+import UpdateRecord from './UpdateRecord';
 
-export interface TaskWithStatus extends Task {
-  done: boolean;
+export interface TaskWithRecord extends Task {
+  record: TaskRecord | null;
 }
 
 class TaskUseCase {
   constructor(
     public findById: (id: string) => Promise<Task | undefined>,
-    public findCurrent: (userId: string) => Promise<TaskWithStatus[]>,
+    public findCurrent: (userId: string) => Promise<TaskWithRecord[]>,
     public create: (body: ITask) => Promise<void>,
     public done: (id: string) => Promise<void>,
     public undone: (id: string) => Promise<void>,
+    public updateRecord: (taskId: string, body: Partial<TaskRecord>) => Promise<void>,
   ) {}
 }
 
@@ -25,4 +27,5 @@ export default new TaskUseCase(
   new Create().execute,
   new Done().execute,
   new Undone().execute,
+  new UpdateRecord().execute,
 );

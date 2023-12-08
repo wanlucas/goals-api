@@ -1,18 +1,27 @@
 import moment from 'moment';
 import db from '../../../infra/db';
-import { TaskWithStatus } from '.';
+import { TaskWithRecord } from '.';
 
 export default class FindCurrent {
-  public async execute(userId: string): Promise<TaskWithStatus[]> {
+  constructor() {
+    this.execute = this.execute.bind(this);
+  }
+
+  private format(tasks: any[]): TaskWithRecord[] {
+    return tasks.map(({ records, ...task }) => ({
+      ...task,
+      record: records[0] || null,
+    }));
+  }
+
+  public async execute(userId: string): Promise<any> {
     const now = moment();
 
     const foundTasks = await db.task.findMany({
       include: {
-        records: {
+        records: {     
           where: {
-            date: {
-              
-            }
+            date: now.format('YYYY-MM-DD'),
           },
         },
       },
@@ -48,9 +57,6 @@ export default class FindCurrent {
       },
     });
 
-    return foundTasks.map(({ records, ...task }) => ({
-      ...task,
-      done: records.length > 0,
-    }));
+    return this.format(foundTasks);
   }
 }

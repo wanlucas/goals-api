@@ -9,7 +9,7 @@ const taskSchema = Joi.object({
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
-  time: Joi.string().length(5),
+  time: Joi.string().length(5).allow(null),
   runAt: Joi.array()
     .when('frequency', {
       is: 'daily',
@@ -25,6 +25,14 @@ const taskSchema = Joi.object({
     }), 
 });
 
+const taskRecordSchema = Joi.object({
+  taskId: Joi.string().uuid().required(),
+  date: Joi.string().length(10).required(),
+  done: Joi.boolean().required(),
+  duration: Joi.number().allow(null),
+  quantity: Joi.number().allow(null),
+});
+
 export interface ITask extends IEntity {
   description: string;
   goalId: string;
@@ -33,6 +41,32 @@ export interface ITask extends IEntity {
   time: string | null;
   frequency: string;
   runAt: any;
+}
+
+interface ITaskRecord {
+  taskId: string;
+  date: string;
+  done: boolean;
+  duration: number | null;
+  quantity: number | null;
+}
+
+
+export class TaskRecord {
+  public taskId: string;
+  public date: string;
+  public done: boolean;
+  public duration: number | null;
+  public quantity: number | null;
+
+  public constructor (body: ITaskRecord) {
+    Joi.assert(body, taskRecordSchema);
+    this.taskId = body.taskId;
+    this.date = body.date;
+    this.duration = body.duration;
+    this.quantity = body.quantity;
+    this.done = body.done;
+  }
 }
 
 export default class Task extends Entity {
@@ -50,9 +84,22 @@ export default class Task extends Entity {
     this.description = body.description;
     this.goalId = body.goalId;
     this.frequency = body.frequency;
-    this.time = body.time;
+    this.time = body.time || null;
     this.duration = body.duration || null;
     this.quantity = body.quantity || null;
     this.runAt = body.runAt || null;
+  }
+
+  public createRecord(record: TaskRecord) {
+    const duration = this.duration && Math.min(this.duration, record.duration || 0);
+    const quantity = this.quantity && Math.min(this.quantity, record.quantity || 0);
+
+    return new TaskRecord({
+      taskId: this.id,
+      date: record.date,
+      done: this.duration === duration && this.quantity === quantity,
+      duration,
+      quantity,
+    });
   }
 }

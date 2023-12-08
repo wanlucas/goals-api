@@ -19,9 +19,7 @@
     "jsonwebtoken": "^9.0.1",
     "moment": "^2.29.4",
     "mysql2": "^3.5.2",
-    "nodemon": "^3.0.1",
     "prisma": "^5.5.2",
-    "sequelize-typescript": "^2.1.5",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
@@ -34,6 +32,6 @@
     "eslint": "^8.45.0",
     "eslint-config-xo": "^0.4c3.1",
     "eslint-config-xo-typescript": "^0.56.0",
-    "sequelize-cli": "^6.6.1"
+    "nodemon": "^3.0.2"
   }
 }
