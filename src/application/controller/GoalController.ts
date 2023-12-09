@@ -43,8 +43,7 @@ export default class GoalController {
 
   static async bulkDelete(req: Request, res: Response) {
     const { user } = (req as IRequest);
-    const { ids } = req.body;
-    const output = await goalUseCase.bulkDelete(user.id, ids);
+    const output = await goalUseCase.bulkDelete(user.id, req.body);
 
     return res.status(200).json(output);
   }
