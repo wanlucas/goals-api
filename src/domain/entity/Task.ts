@@ -7,7 +7,7 @@ const taskSchema = Joi.object({
   description: Joi.string().min(3).max(200).required(),
   goalId: Joi.string().uuid().required(),
   duration: Joi.number().allow(null),
-  quantity: Joi.number().allow(null),
+  quantity: Joi.number(),
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
   time: Joi.string().length(5).allow(null),
   runAt: Joi.array()
@@ -33,14 +33,20 @@ const taskRecordSchema = Joi.object({
   quantity: Joi.number().allow(null),
 });
 
+enum Frequency {
+  daily = 'daily',
+  weekly = 'weekly',
+  monthly = 'monthly',
+}
+
 export interface ITask extends IEntity {
   description: string;
   goalId: string;
   duration: number | null;
-  quantity: number | null;
+  quantity: number;
   time: string | null;
   frequency: string;
-  runAt: any;
+  runAt?: number[]
 }
 
 interface ITaskRecord {
@@ -48,7 +54,7 @@ interface ITaskRecord {
   date: string;
   done: boolean;
   duration: number | null;
-  quantity: number | null;
+  quantity: number;
 }
 
 
@@ -64,7 +70,7 @@ export class TaskRecord {
     this.taskId = body.taskId;
     this.date = body.date;
     this.duration = body.duration;
-    this.quantity = body.quantity;
+    this.quantity = body.quantity || 0;
     this.done = body.done;
   }
 }
@@ -73,10 +79,10 @@ export default class Task extends Entity {
   public readonly description: string;
   public readonly goalId: string;
   public readonly duration: number | null;
-  public readonly quantity: number | null;
+  public readonly quantity: number;
   public readonly frequency: string;
   public readonly time: string | null;
-  public readonly runAt?: any;
+  public readonly runAt: any;
 
   public constructor (body: ITask) {
     super(body, taskSchema);
@@ -86,18 +92,32 @@ export default class Task extends Entity {
     this.frequency = body.frequency;
     this.time = body.time || null;
     this.duration = body.duration || null;
-    this.quantity = body.quantity || null;
-    this.runAt = body.runAt || null;
+    this.quantity = body.quantity;
+    this.runAt = body.runAt;
+
+    if (this.runAt) {
+      this.runAt = Array.from(new Set(this.runAt));
+
+      if (this.frequency === Frequency.weekly && this.runAt.length === 7) {
+        this.runAt = undefined;
+        this.frequency = Frequency.daily;
+      }
+    }
   }
 
   public createRecord(record: TaskRecord) {
-    const duration = this.duration && Math.min(this.duration, record.duration || 0);
-    const quantity = this.quantity && Math.min(this.quantity, record.quantity || 0);
+    let duration = this.duration && Math.min(this.duration, record.duration || 0);
+    let quantity = Math.min(this.quantity, record.quantity || 0);
+
+    if (!record.done && duration && record.duration === this.duration) {
+      duration = 0;
+      quantity = Math.min(quantity += 1, this.quantity);
+    }
 
     return new TaskRecord({
       taskId: this.id,
       date: record.date,
-      done: this.duration === duration && this.quantity === quantity,
+      done: this.quantity === quantity,
       duration,
       quantity,
     });

@@ -1,9 +1,10 @@
+import { Body } from '../../../application/Interface';
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 import Task from '../../entity/Task';
 
 export default class FindById {
-  public async execute(id: string) {
+  public async execute(id: string): Promise<Body<Task> | undefined> {
     const foundTask = await db.task.findUnique({
       where: {
         id,
@@ -14,6 +15,6 @@ export default class FindById {
       throw new NotFoundError('Tarefa não encontrada!');
     }
 
-    return new Task(foundTask);
+    return foundTask;
   }
 }

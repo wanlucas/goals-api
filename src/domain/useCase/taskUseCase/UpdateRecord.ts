@@ -1,6 +1,6 @@
 import db from '../../../infra/db';
 import moment from 'moment';
-import Task from '../../entity/Task';
+import Task, { ITask } from '../../entity/Task';
 import { TaskRecord } from '@prisma/client';
 
 export default class UpdateRecord {
@@ -27,7 +27,7 @@ export default class UpdateRecord {
   
     const foundRecord = foundTask?.records[0] || {};
 
-    const task = new Task(foundTask);
+    const task = new Task(foundTask as ITask);
 
     const taskRecord = task.createRecord({
       ...foundRecord,

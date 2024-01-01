@@ -5,6 +5,7 @@ import Undone from './Undone';
 import FindCurrent from './FindCurrent';
 import FindById from './FindById';
 import UpdateRecord from './UpdateRecord';
+import { Body } from '../../../application/Interface';
 
 export interface TaskWithRecord extends Task {
   record: TaskRecord | null;
@@ -12,7 +13,7 @@ export interface TaskWithRecord extends Task {
 
 class TaskUseCase {
   constructor(
-    public findById: (id: string) => Promise<Task | undefined>,
+    public findById: (id: string) => Promise<Body<Task> | undefined>,
     public findCurrent: (userId: string) => Promise<TaskWithRecord[]>,
     public create: (body: ITask) => Promise<void>,
     public done: (id: string) => Promise<void>,
