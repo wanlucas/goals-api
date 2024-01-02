@@ -110,8 +110,8 @@ export default class Task extends Entity {
     let quantity = Math.min(this.quantity, record.quantity || 0);
 
     if (!record.done && duration && record.duration === this.duration) {
-      duration = 0;
       quantity = Math.min(quantity += 1, this.quantity);
+      if (quantity < this.quantity) duration = 0;
     }
 
     return new TaskRecord({
