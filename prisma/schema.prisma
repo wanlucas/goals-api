@@ -38,8 +38,8 @@ model Branch {
 model Goal {
   id          String   @id @default(uuid())
   description String
-  target      Int
-  score       Int
+  target      Int?
+  score       Int?
   difficulty  Int
   branchId    String
   createdAt   DateTime @default(now())
@@ -53,6 +53,7 @@ model Task {
   description String
   goalId      String
   duration    Int?
+  value       Int?
   quantity    Int
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt

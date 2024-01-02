@@ -10,6 +10,7 @@ const taskSchema = Joi.object({
   quantity: Joi.number(),
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
   time: Joi.string().length(5).allow(null),
+  value: Joi.number().allow(null),
   runAt: Joi.array()
     .when('frequency', {
       is: 'daily',
@@ -46,6 +47,7 @@ export interface ITask extends IEntity {
   quantity: number;
   time: string | null;
   frequency: string;
+  value: number | null;
   runAt?: number[]
 }
 
@@ -80,6 +82,7 @@ export default class Task extends Entity {
   public readonly goalId: string;
   public readonly duration: number | null;
   public readonly quantity: number;
+  public readonly value: number | null;
   public readonly frequency: string;
   public readonly time: string | null;
   public readonly runAt: any;
@@ -91,6 +94,7 @@ export default class Task extends Entity {
     this.goalId = body.goalId;
     this.frequency = body.frequency;
     this.time = body.time || null;
+    this.value = body.value || null;
     this.duration = body.duration || null;
     this.quantity = body.quantity;
     this.runAt = body.runAt;
