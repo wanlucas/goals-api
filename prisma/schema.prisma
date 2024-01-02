@@ -51,16 +51,19 @@ model Goal {
 model Task {
   id          String       @id @default(uuid())
   description String
-  goalId      String
+  goalId      String?
   duration    Int?
   value       Int?
   quantity    Int
+  type        Int          @default(1)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+  deletedAt   DateTime?
   frequency   String
+  increment   Int?
   time        String?
   runAt       Json?
-  goal        Goal         @relation(fields: [goalId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  goal        Goal?        @relation(fields: [goalId], references: [id], onDelete: SetNull, onUpdate: SetNull)
   records     TaskRecord[]
 }
 
@@ -69,6 +72,7 @@ model TaskRecord {
   date     String
   quantity Int?
   duration Int?
+  value    Int?
   done     Boolean @default(false)
   task     Task    @relation(fields: [taskId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 

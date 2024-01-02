@@ -31,6 +31,7 @@ export default class FindCurrent {
             userId,
           },
         },
+        deletedAt: null,
         OR: [
           {
             frequency: 'daily',

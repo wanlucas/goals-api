@@ -1,20 +1,21 @@
 import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
-import Task, { ITask } from './Task';
+import Task, { ITask, TaskType } from './Task';
+import { UnprocessableEntityError } from '../constant/HttpError';
 
 const goalSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
-  target: Joi.number().min(1),
-  score: Joi.number().min(0).max(Joi.ref('target')),
+  target: Joi.number().min(1).allow(null),
+  score: Joi.number().min(0).max(Joi.ref('target')).allow(null),
   difficulty: Joi.number().min(1).max(10).required(),
   branchId: Joi.string().uuid().required(),
 });
 
 export interface IGoal extends IEntity {
   description: string;
-  target?: number ;
-  score?: number;
+  target?: number | null;
+  score?: number | null;
   branchId: string;
   difficulty: number;
 }
@@ -36,18 +37,35 @@ export default class Goal extends Entity {
     this.score = body.score || null;
   }
 
-  public createTask(task: ITask): Task {
+  public createTask(task: Omit<ITask, 'goalId'>): Task {
+    if (this.target) {
+      if (!task.value) {
+        throw new UnprocessableEntityError('Campo value obrigatório');
+      }
+
+      if (task.value > this.target) {
+        throw new UnprocessableEntityError('Valor maior que a meta');
+      }
+    }
+
     return new Task({
       ...task,
       goalId: this.id,
       value: this.target ? task.value : null,
+      type: this.target ? task.type : TaskType.infinite,
       quantity: task.quantity || 1,
     });
   }
 
-  public updateScore(score: number): void {
+  public setScore(score: number): void {
     if (this.target && this.score) {
-      this.score = Math.min(this.target, this.score + score);
+      this.score = Math.min(this.target, score);
+    }
+  }
+
+  public addScore(score: number): void {
+    if (this.target && this.score) {
+      this.setScore(this.score + score);
     }
   }
 

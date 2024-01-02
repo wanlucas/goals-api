@@ -1,16 +1,44 @@
-
 import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
+
+enum Frequency {
+  daily = 'daily',
+  weekly = 'weekly',
+  monthly = 'monthly',
+}
+
+export enum TaskType {
+  infinite,
+  cumulative,
+  crescent,
+}
 
 const taskSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
   goalId: Joi.string().uuid().required(),
   duration: Joi.number().allow(null),
-  quantity: Joi.number(),
+  quantity: Joi.number().allow(null),
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
   time: Joi.string().length(5).allow(null),
-  value: Joi.number().allow(null),
+  type: Joi.number().valid(0, 1, 2).required(),
+  increment: Joi.number().required().when('type', {
+    not: TaskType.crescent,
+    then: Joi.valid(null),
+  }),
+  value: Joi.number()
+    .when('type', {
+      is: TaskType.infinite,
+      then: Joi.valid(null),
+    })
+    .when('type', {
+      is: TaskType.cumulative,
+      then: Joi.number().min(1).required(),
+    })
+    .when('type', {
+      is: TaskType.crescent,
+      then: Joi.number().min(1).required(),
+    }),
   runAt: Joi.array()
     .when('frequency', {
       is: 'daily',
@@ -23,7 +51,7 @@ const taskSchema = Joi.object({
     .when('frequency', {
       is: 'monthly',
       then: Joi.array().items(Joi.number().min(1).max(31)),
-    }), 
+    }),
 });
 
 const taskRecordSchema = Joi.object({
@@ -34,31 +62,27 @@ const taskRecordSchema = Joi.object({
   quantity: Joi.number().allow(null),
 });
 
-enum Frequency {
-  daily = 'daily',
-  weekly = 'weekly',
-  monthly = 'monthly',
-}
-
 export interface ITask extends IEntity {
   description: string;
   goalId: string;
   duration: number | null;
-  quantity: number;
+  quantity: number | null;
   time: string | null;
+  increment: number | null;
   frequency: string;
   value: number | null;
-  runAt?: number[]
+  type: TaskType;
+  runAt?: number[];
 }
 
 interface ITaskRecord {
   taskId: string;
   date: string;
   done: boolean;
-  duration: number | null;
-  quantity: number;
+  quantity?: number | null;
+  duration?: number | null;
+  value?: number | null;
 }
-
 
 export class TaskRecord {
   public taskId: string;
@@ -66,28 +90,32 @@ export class TaskRecord {
   public done: boolean;
   public duration: number | null;
   public quantity: number | null;
+  public value: number | null;
 
-  public constructor (body: ITaskRecord) {
+  public constructor(body: ITaskRecord) {
     Joi.assert(body, taskRecordSchema);
     this.taskId = body.taskId;
     this.date = body.date;
-    this.duration = body.duration;
     this.quantity = body.quantity || 0;
     this.done = body.done;
+    this.duration = body.duration || null;
+    this.value = body.value || null;
   }
 }
 
 export default class Task extends Entity {
   public readonly description: string;
-  public readonly goalId: string;
+  public readonly goalId: string | null;
   public readonly duration: number | null;
   public readonly quantity: number;
-  public readonly value: number | null;
   public readonly frequency: string;
   public readonly time: string | null;
+  public readonly type: TaskType;
+  public readonly increment: number | null;
   public readonly runAt: any;
+  public value: number | null;
 
-  public constructor (body: ITask) {
+  public constructor(body: ITask) {
     super(body, taskSchema);
 
     this.description = body.description;
@@ -96,8 +124,10 @@ export default class Task extends Entity {
     this.time = body.time || null;
     this.value = body.value || null;
     this.duration = body.duration || null;
-    this.quantity = body.quantity;
+    this.quantity = body.quantity || 1;
+    this.type = body.type;
     this.runAt = body.runAt;
+    this.increment = body.increment || null;
 
     if (this.runAt) {
       this.runAt = Array.from(new Set(this.runAt));
@@ -109,18 +139,32 @@ export default class Task extends Entity {
     }
   }
 
-  public createRecord(record: TaskRecord) {
-    let duration = this.duration && Math.min(this.duration, record.duration || 0);
+  public setValue(value: number): void {
+    if (this.value && this.type === TaskType.crescent) {
+      this.value = value;
+    }
+  }
+
+  public addValue(value: number): void {
+    if (this.value && this.type === TaskType.crescent) {
+      this.value += value;
+    }
+  }
+
+  public createRecord(record: Omit<ITaskRecord, 'taskId'>) {
+    let duration =
+      this.duration && Math.min(this.duration, record.duration || 0);
     let quantity = Math.min(this.quantity, record.quantity || 0);
 
     if (!record.done && duration && record.duration === this.duration) {
-      quantity = Math.min(quantity += 1, this.quantity);
+      quantity = Math.min((quantity += 1), this.quantity);
       if (quantity < this.quantity) duration = 0;
     }
 
     return new TaskRecord({
       taskId: this.id,
       date: record.date,
+      value: record.value,
       done: this.quantity === quantity,
       duration,
       quantity,

@@ -3,7 +3,7 @@ import { NotFoundError } from '../../constant/HttpError';
 import Goal from '../../entity/Goal';
 
 export default class FindById {
-  public async execute(id: string) {
+  public async execute(id: string): Promise<Goal> {
     const foundGoal = await db.goal.findUnique({
       where: {
         id,
