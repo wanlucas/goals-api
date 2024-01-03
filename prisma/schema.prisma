@@ -59,6 +59,7 @@ model Task {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
+  completedAt String?
   frequency   String
   increment   Int?
   time        String?

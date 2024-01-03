@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { Body } from '../../../application/Interface';
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
@@ -8,7 +9,14 @@ export default class FindById {
     const foundTask = await db.task.findUnique({
       where: {
         id,
-        deletedAt: null,
+        OR: [
+          {
+            completedAt: null,
+          },
+          {
+            completedAt: moment().format('YYYY-MM-DD'),
+          },
+        ]
       },
     });
 

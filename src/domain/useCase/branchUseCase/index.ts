@@ -6,9 +6,10 @@ import Update from './Update';
 import Remove from './Remove';
 import Goal from '../../entity/Goal';
 import Task from '../../entity/Task';
+import IncrementXp from './IncrementXp';
 import { Body } from '../../../application/Interface';
 
-export interface IBranchWithGoalsAndTasks extends Branch {
+export interface IBranchWithGoalsAndTasks extends Body<Branch> {
   goals: (Body<Goal> & {
     tasks: Body<Task>[];
   })[];
@@ -16,11 +17,12 @@ export interface IBranchWithGoalsAndTasks extends Branch {
 
 class BranchUseCase {
   constructor(
-    public findAll: (userId: string) => Promise<Branch[]>,
+    public findAll: (userId: string) => Promise<Body<Branch>[]>,
     public findById: (id: string) => Promise<IBranchWithGoalsAndTasks>,
     public create: (userId: string, body: IBranch) => Promise<Branch>,
     public update: (id: string, body: Partial<IBranch>) => Promise<void>,
     public remove: (id: string) => Promise<void>,
+    public incrementXp: (id: string, xp: number) => Promise<void>,
   ) { }
 }
 
@@ -30,4 +32,5 @@ export default new BranchUseCase(
   new Create().execute,
   new Update().execute,
   new Remove().execute,
+  new IncrementXp().execute,
 );

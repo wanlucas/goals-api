@@ -7,9 +7,13 @@ const goalSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
   target: Joi.number().min(1).allow(null),
-  score: Joi.number().min(0).max(Joi.ref('target')).allow(null),
   difficulty: Joi.number().min(1).max(10).required(),
   branchId: Joi.string().uuid().required(),
+  score: Joi.allow(null).when('target', {
+    is: Joi.number(),
+    then: Joi.number().min(0).max(Joi.ref('target')),
+    otherwise: Joi.forbidden(),
+  }),
 });
 
 export interface IGoal extends IEntity {
@@ -34,7 +38,7 @@ export default class Goal extends Entity {
     this.target = body.target || null;
     this.branchId = body.branchId;
     this.difficulty = body.difficulty;
-    this.score = body.score || null;
+    this.score = body.score || (this.target ? 0 : null);
   }
 
   public createTask(task: Omit<ITask, 'goalId'>): Task {
@@ -58,13 +62,13 @@ export default class Goal extends Entity {
   }
 
   public setScore(score: number): void {
-    if (this.target && this.score) {
-      this.score = Math.min(this.target, score);
+    if (this.target && this.score !== null) {
+      this.score = Math.max(0, Math.min(this.target, score));
     }
   }
 
-  public addScore(score: number): void {
-    if (this.target && this.score) {
+  public incrementScore(score: number): void {
+    if (this.target && this.score !== null) {
       this.setScore(this.score + score);
     }
   }

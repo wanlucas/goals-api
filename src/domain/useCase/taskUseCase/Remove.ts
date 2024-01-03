@@ -1,3 +1,4 @@
+import moment from 'moment';
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 
@@ -6,7 +7,6 @@ export default class Remove {
     const foundTask = await db.task.findUnique({
       where: {
         id,
-        deletedAt: null,
       },
     });
 
@@ -19,9 +19,8 @@ export default class Remove {
         id: foundTask.id,
       },
       data: {
-        deletedAt: new Date(),
+        deletedAt: moment().toISOString(),
       },
     });
-    
   }
 }

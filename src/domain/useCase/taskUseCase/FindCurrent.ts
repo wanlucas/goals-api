@@ -7,6 +7,7 @@ export default class FindCurrent {
     this.execute = this.execute.bind(this);
   }
 
+  // TODO: remove any
   private format(tasks: any[]): TaskWithRecord[] {
     return tasks.map(({ records, ...task }) => ({
       ...task,
@@ -19,7 +20,7 @@ export default class FindCurrent {
 
     const foundTasks = await db.task.findMany({
       include: {
-        records: {     
+        records: {
           where: {
             date: now.format('YYYY-MM-DD'),
           },
@@ -31,30 +32,43 @@ export default class FindCurrent {
             userId,
           },
         },
-        deletedAt: null,
-        OR: [
+        AND: [
           {
-            frequency: 'daily',
+            OR: [
+              {
+                completedAt: null,
+              },
+              {
+                completedAt: now.format('YYYY-MM-DD'),
+              },
+            ],
           },
           {
-            frequency: 'weekly',
-            runAt: {
-              array_contains: now.day(),
-            },
-          },
-          {
-            frequency: 'monthly',
-            runAt: {
-              array_contains: now.date(),
-            },
+            OR: [
+              {
+                frequency: 'daily',
+              },
+              {
+                frequency: 'weekly',
+                runAt: {
+                  array_contains: now.day(),
+                },
+              },
+              {
+                frequency: 'monthly',
+                runAt: {
+                  array_contains: now.date(),
+                },
+              },
+            ],
           },
         ],
       },
       orderBy: {
         time: {
           sort: 'asc',
-          nulls: 'last'
-        }
+          nulls: 'last',
+        },
       },
     });
 

@@ -5,14 +5,13 @@ import { TaskRecord } from '@prisma/client';
 import goalUseCase from '../goalUseCase';
 import Goal from '../../entity/Goal';
 import { NotFoundError, UnauthorizedError } from '../../constant/HttpError';
-import taskUseCase from '.';
 
 export default class UpdateRecord {
   constructor() {
-    this.execute.bind(this);
+    this.execute = this.execute.bind(this);
   }
 
-  private async cumulativeAggregation(task: Task) {
+  private async cumulativeDone(task: Task) {
     if (!task.value) {
       throw new UnauthorizedError('Campo value inexistente');
     }
@@ -24,23 +23,24 @@ export default class UpdateRecord {
     const foundGoal = await goalUseCase.findById(task.goalId);
     const goal = new Goal(foundGoal);
 
-    goal.addScore(task.value);
+    goal.incrementScore(task.value);
 
     if (goal.isCompleted()) {
-      await taskUseCase.remove(task.id);
+      await db.task.update({
+        where: {
+          id: task.id,
+        },
+        data: {
+          completedAt: moment().format('YYYY-MM-DD'),
+        },
+      });
     }
 
-    await db.goal.update({
-      where: {
-        id: goal.id,
-      },
-      data: goal,
-    });
-
-    return task;
+    await goalUseCase.update(goal.id, goal);
   }
 
-  private async crescentAggregation(task: Task) {
+  private async cumulativeUndone(task: Task) {
+    // TODO: remove this
     if (!task.value) {
       throw new UnauthorizedError('Campo value inexistente');
     }
@@ -52,15 +52,47 @@ export default class UpdateRecord {
     const foundGoal = await goalUseCase.findById(task.goalId);
     const goal = new Goal(foundGoal);
 
-    task.setValue(
-      Math.min(task.value + task.increment!, goal.target!)
-    );
+    goal.incrementScore(-task.value);
+
+    await db.task.update({
+      where: {
+        id: task.id,
+      },
+      data: {
+        completedAt: null,
+      },
+    });
+
+    await goalUseCase.update(goal.id, goal);
+  }
+
+  private async crescentDone(task: Task) {
+    // TODO: remove this
+    if (!task.value) {
+      throw new UnauthorizedError('Campo value inexistente');
+    }
+
+    if (!task.goalId) {
+      throw new NotFoundError('Tarefa não está associada a uma meta');
+    }
+
+    const foundGoal = await goalUseCase.findById(task.goalId);
+    const goal = new Goal(foundGoal);
 
     goal.setScore(task.value);
 
     if (goal.isCompleted()) {
-      await taskUseCase.remove(task.id);
+      await db.task.update({
+        where: {
+          id: task.id,
+        },
+        data: {
+          completedAt: moment().format('YYYY-MM-DD'),
+        },
+      });
     } else {
+      task.setValue(Math.min(task.value + task.increment!, goal.target!));
+
       await db.task.update({
         where: {
           id: task.id,
@@ -69,12 +101,26 @@ export default class UpdateRecord {
       });
     }
 
-    await db.goal.update({
-      where: {
-        id: goal.id,
-      },
-      data: goal,
-    });
+    await goalUseCase.update(goal.id, goal);
+  }
+
+  private async crescentUndone(task: Task) {
+    // TODO: remove this
+    if (!task.value) {
+      throw new UnauthorizedError('Campo value inexistente');
+    }
+
+    if (!task.goalId) {
+      throw new NotFoundError('Tarefa não está associada a uma meta');
+    }
+
+    const foundGoal = await goalUseCase.findById(task.goalId);
+    const goal = new Goal(foundGoal);
+
+    goal.incrementScore(-task.increment!);
+    console.log(goal);
+    
+    await goalUseCase.update(goal.id, goal);
   }
 
   public async execute(
@@ -82,7 +128,6 @@ export default class UpdateRecord {
     record: Partial<TaskRecord>
   ): Promise<void> {
     const today = moment().format('YYYY-MM-DD');
-
     const foundTask = await db.task.findUnique({
       include: {
         records: {
@@ -93,7 +138,6 @@ export default class UpdateRecord {
       },
       where: {
         id: taskId,
-        deletedAt: null,
       },
     });
 
@@ -132,10 +176,19 @@ export default class UpdateRecord {
     if (taskRecord.done) {
       switch (task.type) {
       case TaskType.cumulative:
-        await this.cumulativeAggregation(task);
+        await this.cumulativeDone(task);
         break;
       case TaskType.crescent:
-        await this.crescentAggregation(task);
+        await this.crescentDone(task);
+        break;
+      }
+    } else if (foundRecord.done) {
+      switch (task.type) {
+      case TaskType.cumulative:
+        await this.cumulativeUndone(task);
+        break;
+      case TaskType.crescent:
+        await this.crescentUndone(task);
         break;
       }
     }

@@ -22,6 +22,7 @@ const taskSchema = Joi.object({
   frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
   time: Joi.string().length(5).allow(null),
   type: Joi.number().valid(0, 1, 2).required(),
+  completedAt: Joi.string().length(10).allow(null),
   increment: Joi.number().required().when('type', {
     not: TaskType.crescent,
     then: Joi.valid(null),
@@ -60,6 +61,7 @@ const taskRecordSchema = Joi.object({
   done: Joi.boolean().required(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
+  value: Joi.number().allow(null),
 });
 
 export interface ITask extends IEntity {
@@ -69,6 +71,7 @@ export interface ITask extends IEntity {
   quantity: number | null;
   time: string | null;
   increment: number | null;
+  completedAt?: string | null;
   frequency: string;
   value: number | null;
   type: TaskType;
@@ -110,6 +113,7 @@ export default class Task extends Entity {
   public readonly quantity: number;
   public readonly frequency: string;
   public readonly time: string | null;
+  public readonly completedAt: string | null;
   public readonly type: TaskType;
   public readonly increment: number | null;
   public readonly runAt: any;
@@ -124,6 +128,7 @@ export default class Task extends Entity {
     this.time = body.time || null;
     this.value = body.value || null;
     this.duration = body.duration || null;
+    this.completedAt = body.completedAt || null;
     this.quantity = body.quantity || 1;
     this.type = body.type;
     this.runAt = body.runAt;
@@ -164,7 +169,7 @@ export default class Task extends Entity {
     return new TaskRecord({
       taskId: this.id,
       date: record.date,
-      value: record.value,
+      value: this.value,
       done: this.quantity === quantity,
       duration,
       quantity,
