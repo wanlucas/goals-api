@@ -157,16 +157,10 @@ export default class Task extends Entity {
   }
 
   public createRecord(record: Omit<ITaskRecord, 'taskId'>) {
-    let duration =
-      this.duration && Math.min(this.duration, record.duration || 0);
-    let quantity = Math.min(this.quantity, record.quantity || 0);
+    const duration = this.duration && Math.min(this.duration, record.duration || 0);
+    const quantity = Math.min(this.quantity, record.quantity || 0);
 
-    if (!record.done && duration && record.duration === this.duration) {
-      quantity = Math.min((quantity += 1), this.quantity);
-      if (quantity < this.quantity) duration = 0;
-    }
-
-    return new TaskRecord({
+    const taskRecord = new TaskRecord({
       taskId: this.id,
       date: record.date,
       value: this.value,
@@ -174,5 +168,13 @@ export default class Task extends Entity {
       duration,
       quantity,
     });
+
+    if (!record.done && duration && record.duration === this.duration) {
+      taskRecord.quantity = Math.min(quantity + 1, this.quantity);
+      if (quantity < this.quantity) taskRecord.duration = 0;
+    }
+
+    return taskRecord;
   }
 }
+

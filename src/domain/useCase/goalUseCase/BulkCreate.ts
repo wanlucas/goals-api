@@ -9,10 +9,8 @@ export default class BulkCreate {
     if (!payload || !payload.length) {
       throw new UnprocessableEntityError('Metas não fornecidas!');
     }
-    const goals = payload.map(({ description, difficulty, target }) => new Goal({
-      description,
-      difficulty,
-      target,
+    const goals = payload.map((goal) => new Goal({
+      ...goal,
       branchId,
     }));
   

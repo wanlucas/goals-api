@@ -123,10 +123,7 @@ export default class UpdateRecord {
     await goalUseCase.update(goal.id, goal);
   }
 
-  public async execute(
-    taskId: string,
-    record: Partial<TaskRecord>
-  ): Promise<void> {
+  public async execute(taskId: string, record: Partial<TaskRecord>): Promise<void> {
     const today = moment().format('YYYY-MM-DD');
     const foundTask = await db.task.findUnique({
       include: {

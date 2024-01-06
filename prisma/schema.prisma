@@ -25,6 +25,7 @@ model Branch {
   name      String
   userId    String
   icon      String
+  class     String?
   xp        Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -40,10 +41,10 @@ model Goal {
   description String
   target      Int?
   score       Int?
-  difficulty  Int
   branchId    String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  completedAt String?
   tasks       Task[]
   branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

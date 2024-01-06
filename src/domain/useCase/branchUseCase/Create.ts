@@ -3,8 +3,7 @@ import Branch, { IBranch } from '../../entity/Branch';
 import { ConflictError, NotFoundError } from '../../constant/HttpError';
 
 export default class Create {
-  public async execute(userId: string, body: IBranch) {
-    // TODO impedir criação com xp
+  public async execute(userId: string, { xp: _, ...body }: IBranch) {
     const branch = new Branch({ ...body, userId });
     const foundUser = await db.user.findUnique({
       where: {

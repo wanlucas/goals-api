@@ -22,4 +22,10 @@ export default abstract class Entity {
 
     this.id = body.id || uuid();
   }
+
+  protected getDate() {
+    const date = new Date();
+
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+  }
 }
