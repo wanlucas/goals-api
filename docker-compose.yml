@@ -1,5 +1,27 @@
 version: "3.8"
 services:
+  api:
+    build: .
+    container_name: api
+    restart: on-failure
+    tty: true
+    stdin_open: true
+    ports:
+      - 8080:8080
+    entrypoint: [ "npm", "start" ]
+    environment:
+      - DATABASE_URL=mysql://root:${DB_PASSWORD}@localhost:3306/goals
+      - DB_NAME=goals
+      - DB_PASSWORD=${DB_PASSWORD}
+      - PORT=${PORT}
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+    networks:
+      - app-connect
+    depends_on:
+      db:
+        condition: service_healthy
   db:
     image: mysql:8.0.28
     platform: linux/x86_64
@@ -12,6 +34,13 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
       - 3306:3306
+    networks:
+      - app-connect
     healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 2s
       retries: 10
+
+networks:
+  app-connect:
+    driver: bridge
