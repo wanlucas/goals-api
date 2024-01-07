@@ -6,9 +6,39 @@ export default class FindAll {
       where: {
         userId,
         deletedAt: null,
-      }
+      },
+      include: {
+        goals: {
+          select: {
+            _count: {
+              select: {
+                tasks: {
+                  where: {
+                    completedAt: null,
+                  },
+                },
+              },
+            },
+          },
+        },
+        _count: {
+          select: {
+            goals: {
+              where: {
+                completedAt: {
+                  not: null,
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
-    return foundBranchs;
+    return foundBranchs.map(({ _count, goals, ...branch }) => ({
+      ...branch,
+      completedTasks: goals.reduce((acc, { _count }) => acc + _count.tasks, 0),
+      completedGoals: _count.goals,
+    }));
   }
 }

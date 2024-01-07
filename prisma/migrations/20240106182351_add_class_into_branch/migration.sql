@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE `Branch` ADD COLUMN `class` VARCHAR(191) NOT NULL DEFAULT 'a';

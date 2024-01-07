@@ -1,5 +1,0 @@
--- AlterTable
-ALTER TABLE `Task` ADD COLUMN `type` INTEGER NOT NULL DEFAULT 1;
-
--- AlterTable
-ALTER TABLE `TaskRecord` ADD COLUMN `value` INTEGER NULL;

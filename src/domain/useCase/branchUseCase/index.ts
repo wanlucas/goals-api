@@ -14,6 +14,11 @@ export interface IBranchWithGoalsAndTasks extends Body<Branch> {
   })[];
 }
 
+export interface IBranchWithSummary extends Body<Branch> {
+  completedGoals: number;
+  completedTasks: number;
+}
+
 class BranchUseCase {
   constructor(
     public findAll: (userId: string) => Promise<Body<Branch>[]>,
