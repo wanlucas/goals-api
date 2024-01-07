@@ -17,6 +17,7 @@ export default class BulkCreate {
     const foundBranch = await db.branch.findUnique({
       where: {
         id: branchId,
+        deletedAt: null,
       },
     });
 

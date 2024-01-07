@@ -108,7 +108,7 @@ export class TaskRecord {
 
 export default class Task extends Entity {
   public readonly description: string;
-  public readonly goalId: string | null;
+  public readonly goalId: string;
   public readonly duration: number | null;
   public readonly quantity: number;
   public readonly frequency: string;

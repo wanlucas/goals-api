@@ -5,6 +5,7 @@ export default class FindAll {
     const foundBranchs = await db.branch.findMany({
       where: {
         userId,
+        deletedAt: null,
       }
     });
 

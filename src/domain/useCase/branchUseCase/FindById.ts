@@ -7,9 +7,13 @@ export default class FindById {
     const foundBranch = await db.branch.findUnique({
       where: {
         id,
+        deletedAt: null,
       },
       include: {
         goals: {
+          where: {
+            completedAt: null,
+          },
           include: {
             tasks: true,
           },

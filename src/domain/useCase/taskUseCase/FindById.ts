@@ -9,10 +9,12 @@ export default class FindById {
     const foundTask = await db.task.findUnique({
       where: {
         id,
+        deletedAt: null,
         OR: [
           {
             completedAt: null,
           },
+          // TODO - use internal fn to get today  
           {
             completedAt: moment().format('YYYY-MM-DD'),
           },

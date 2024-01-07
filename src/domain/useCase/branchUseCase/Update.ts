@@ -10,16 +10,16 @@ export default class Update {
       }
     });
 
-
     if (!foundBranch) {
       throw new NotFoundError('Branch não encontrada!');
     }
 
-    const { xp: _, ...branch } = new Branch({ ...foundBranch, ...body });
+    const branch = new Branch({ ...foundBranch, ...body });
 
     await db.branch.update({
       where: {
         id,
+        deletedAt: null,
       },
       data: branch,
     });

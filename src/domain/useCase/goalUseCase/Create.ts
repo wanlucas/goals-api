@@ -19,6 +19,7 @@ export default class Create {
     const foundBranch = await db.branch.findUnique({
       where: {
         id: goal.branchId,
+        deletedAt: null,
       },
     });
 

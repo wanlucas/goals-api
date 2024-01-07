@@ -1,6 +1,6 @@
-import moment from 'moment';
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
+import date from '../../../tool/date';
 
 export default class Remove {
   public async execute(id: string) {
@@ -14,13 +14,27 @@ export default class Remove {
       throw new NotFoundError('Task não encontrada!');
     }
 
-    await db.task.update({
+    const foundTaskRecord = await db.taskRecord.findFirst({
       where: {
-        id: foundTask.id,
-      },
-      data: {
-        deletedAt: moment().toISOString(),
+        taskId: foundTask.id,
       },
     });
+
+    if (foundTaskRecord) {
+      await db.task.update({
+        where: {
+          id: foundTask.id,
+        },
+        data: {
+          deletedAt: date.now(),
+        },
+      });
+    } else {
+      await db.task.delete({
+        where: {
+          id: foundTask.id,
+        },
+      });
+    }
   }
 }

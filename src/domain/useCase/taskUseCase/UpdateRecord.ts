@@ -16,10 +16,6 @@ export default class UpdateRecord {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
-    if (!task.goalId) {
-      throw new NotFoundError('Tarefa não está associada a uma meta');
-    }
-
     const foundGoal = await goalUseCase.findById(task.goalId);
     const goal = new Goal(foundGoal);
 
@@ -45,10 +41,6 @@ export default class UpdateRecord {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
-    if (!task.goalId) {
-      throw new NotFoundError('Tarefa não está associada a uma meta');
-    }
-
     const foundGoal = await goalUseCase.findById(task.goalId);
     const goal = new Goal(foundGoal);
 
@@ -70,10 +62,6 @@ export default class UpdateRecord {
     // TODO: remove this
     if (!task.value) {
       throw new UnauthorizedError('Campo value inexistente');
-    }
-
-    if (!task.goalId) {
-      throw new NotFoundError('Tarefa não está associada a uma meta');
     }
 
     const foundGoal = await goalUseCase.findById(task.goalId);
@@ -110,20 +98,16 @@ export default class UpdateRecord {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
-    if (!task.goalId) {
-      throw new NotFoundError('Tarefa não está associada a uma meta');
-    }
-
     const foundGoal = await goalUseCase.findById(task.goalId);
     const goal = new Goal(foundGoal);
 
     goal.incrementScore(-task.increment!);
-    console.log(goal);
     
     await goalUseCase.update(goal.id, goal);
   }
 
   public async execute(taskId: string, record: Partial<TaskRecord>): Promise<void> {
+    // TODO - use internal fn to get today
     const today = moment().format('YYYY-MM-DD');
     const foundTask = await db.task.findUnique({
       include: {

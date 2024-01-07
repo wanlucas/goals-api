@@ -6,7 +6,6 @@ import Update from './Update';
 import Remove from './Remove';
 import Goal from '../../entity/Goal';
 import Task from '../../entity/Task';
-import IncrementXp from './IncrementXp';
 import { Body } from '../../../application/Interface';
 
 export interface IBranchWithGoalsAndTasks extends Body<Branch> {
@@ -22,7 +21,6 @@ class BranchUseCase {
     public create: (userId: string, body: IBranch) => Promise<Branch>,
     public update: (id: string, body: Partial<IBranch>) => Promise<void>,
     public remove: (id: string) => Promise<void>,
-    public incrementXp: (id: string, xp: number) => Promise<void>,
   ) { }
 }
 
@@ -32,5 +30,4 @@ export default new BranchUseCase(
   new Create().execute,
   new Update().execute,
   new Remove().execute,
-  new IncrementXp().execute,
 );

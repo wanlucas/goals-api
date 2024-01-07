@@ -6,6 +6,8 @@ export default class Update {
   public async execute(id: string, body: Partial<Goal>) {
     const foundGoal = await db.goal.findUnique({
       where: {
+        completedAt: null,
+        deletedAt: null,
         id,
       }
     });

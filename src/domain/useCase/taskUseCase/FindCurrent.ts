@@ -27,6 +27,7 @@ export default class FindCurrent {
         },
       },
       where: {
+        deletedAt: null,
         goal: {
           branch: {
             userId,
