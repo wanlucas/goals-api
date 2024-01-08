@@ -10,8 +10,8 @@ services:
       - 8080:8080
     entrypoint: [ "npm", "start" ]
     environment:
-      - DATABASE_URL=mysql://root:${DB_PASSWORD}@localhost:3306/goals
-      - DB_NAME=goals
+      - DATABASE_URL=${DATABASE_URL}
+      - DB_NAME=${DB_NAME}
       - DB_PASSWORD=${DB_PASSWORD}
       - PORT=${PORT}
     working_dir: /home/node/app
