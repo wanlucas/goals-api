@@ -11,7 +11,8 @@ app.listen(PORT, async () => {
     console.log(`Listeaning on port ${PORT}!`);
     await db.$connect();
     console.log('DB is running!');
-  } catch {
+  } catch (error) {
     console.log('DB is not running!');
+    console.log(error);
   }
 });
