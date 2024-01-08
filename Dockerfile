@@ -4,9 +4,8 @@ RUN apt update && apt upgrade -y
 
 COPY . . 
 
-RUN npm install
-RUN npm run build
-
+RUN npm install && npm run build && npx prisma migrate deploy
+ 
 EXPOSE 8080
 
 ENTRYPOINT [ "npm", "start" ]
