@@ -4,7 +4,7 @@ RUN apt update && apt upgrade -y
 
 COPY . . 
 
-RUN npm install && npm run build && npx prisma migrate deploy
+RUN npm install && npm run build
  
 EXPOSE 8080
 
