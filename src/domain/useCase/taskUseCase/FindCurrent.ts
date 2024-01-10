@@ -1,6 +1,7 @@
 import moment from 'moment';
 import db from '../../../infra/db';
 import { TaskWithRecord } from '.';
+import { Frequency } from '../../entity/Task';
 
 export default class FindCurrent {
   constructor() {
@@ -47,16 +48,16 @@ export default class FindCurrent {
           {
             OR: [
               {
-                frequency: 'daily',
+                frequency: Frequency.daily,
               },
               {
-                frequency: 'weekly',
+                frequency: Frequency.weekly,
                 runAt: {
                   array_contains: now.day(),
                 },
               },
               {
-                frequency: 'monthly',
+                frequency: Frequency.monthly,
                 runAt: {
                   array_contains: now.date(),
                 },

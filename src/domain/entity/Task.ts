@@ -1,10 +1,10 @@
 import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
 
-enum Frequency {
-  daily = 'daily',
-  weekly = 'weekly',
-  monthly = 'monthly',
+export enum Frequency {
+  daily,
+  weekly,
+  monthly,
 }
 
 export enum TaskType {
@@ -19,14 +19,18 @@ const taskSchema = Joi.object({
   goalId: Joi.string().uuid().required(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
-  frequency: Joi.string().valid('daily', 'weekly', 'monthly').required(),
   time: Joi.string().length(5).allow(null),
   type: Joi.number().valid(0, 1, 2).required(),
   completedAt: Joi.string().length(10).allow(null),
-  increment: Joi.number().required().when('type', {
-    not: TaskType.crescent,
-    then: Joi.valid(null),
-  }),
+  frequency: Joi.string()
+    .valid(Frequency.daily, Frequency.weekly, Frequency.monthly)
+    .required(),
+  increment: Joi.number()
+    .required()
+    .when('type', {
+      not: TaskType.crescent,
+      then: Joi.valid(null),
+    }),
   value: Joi.number()
     .when('type', {
       is: TaskType.infinite,
@@ -42,15 +46,15 @@ const taskSchema = Joi.object({
     }),
   runAt: Joi.array()
     .when('frequency', {
-      is: 'daily',
+      is: Frequency.daily,
       then: Joi.valid(null),
     })
     .when('frequency', {
-      is: 'weekly',
+      is: Frequency.weekly,
       then: Joi.array().items(Joi.number().min(0).max(6)),
     })
     .when('frequency', {
-      is: 'monthly',
+      is: Frequency.monthly,
       then: Joi.array().items(Joi.number().min(1).max(31)),
     }),
 });
@@ -72,7 +76,7 @@ export interface ITask extends IEntity {
   time: string | null;
   increment: number | null;
   completedAt?: string | null;
-  frequency: string;
+  frequency: Frequency;
   value: number | null;
   type: TaskType;
   runAt?: number[];
@@ -111,7 +115,7 @@ export default class Task extends Entity {
   public readonly goalId: string;
   public readonly duration: number | null;
   public readonly quantity: number;
-  public readonly frequency: string;
+  public readonly frequency: Frequency;
   public readonly time: string | null;
   public readonly completedAt: string | null;
   public readonly type: TaskType;
@@ -157,7 +161,8 @@ export default class Task extends Entity {
   }
 
   public createRecord(record: Omit<ITaskRecord, 'taskId'>) {
-    const duration = this.duration && Math.min(this.duration, record.duration || 0);
+    const duration =
+      this.duration && Math.min(this.duration, record.duration || 0);
     const quantity = Math.min(this.quantity, record.quantity || 0);
 
     const taskRecord = new TaskRecord({
@@ -177,4 +182,3 @@ export default class Task extends Entity {
     return taskRecord;
   }
 }
-

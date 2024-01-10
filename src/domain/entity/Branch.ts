@@ -4,9 +4,9 @@ import Joi from 'joi';
 const branchSchema = Joi.object({
   id: Joi.string().uuid(),
   name: Joi.string().min(3).max(25).required(),
-  class: Joi.string().min(3).max(25),
+  class: Joi.string().min(3).max(25).allow(null),
   userId: Joi.string().uuid().required(),
-  icon: Joi.string().max(10),
+  icon: Joi.string().max(10).allow(null),
 });
 
 export interface IBranch extends IEntity {

@@ -60,7 +60,7 @@ model Task {
   updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
   completedAt String?
-  frequency   String
+  frequency   Int
   increment   Int?
   time        String?
   runAt       Json?
