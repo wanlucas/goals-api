@@ -13,13 +13,13 @@ export interface IBranch extends IEntity {
   name: string;
   userId: string;
   class?: string | null;
-  icon?: string;
+  icon?: string | null;
 }
 
 export default class Branch extends Entity {
   public readonly name: string;
   public readonly userId: string;
-  public readonly icon: string;
+  public readonly icon: string | null;
   public readonly class: string | null;
 
   public constructor (body: IBranch) {
@@ -27,7 +27,7 @@ export default class Branch extends Entity {
 
     this.name = body.name;
     this.userId = body.userId;
-    this.icon = body.icon || '1';
+    this.icon = body.icon || null;
     this.class = body.class || null;
   }
 }

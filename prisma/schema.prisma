@@ -23,7 +23,7 @@ model Branch {
   id        String    @id @default(uuid())
   name      String
   userId    String
-  icon      String
+  icon      String?
   class     String?
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
