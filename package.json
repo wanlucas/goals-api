@@ -8,6 +8,7 @@
     "start": "node  dist/server.js",
     "build": "tsup src/application/server.ts",
     "logs": "docker logs --tail 1000 -f api",
+    "bash": "docker exec -it api bash",
     "insertentity": "node ./scripts/insertEntity.js"
   },
   "keywords": [],

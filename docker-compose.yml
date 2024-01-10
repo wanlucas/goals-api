@@ -40,7 +40,6 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 2s
       retries: 10
-
 networks:
   app-connect:
     driver: bridge

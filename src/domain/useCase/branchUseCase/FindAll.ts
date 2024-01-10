@@ -14,7 +14,9 @@ export default class FindAll {
               select: {
                 tasks: {
                   where: {
-                    completedAt: null,
+                    completedAt: {
+                      not: null,
+                    },
                   },
                 },
               },
