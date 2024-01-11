@@ -61,7 +61,7 @@ const taskSchema = Joi.object({
 
 const taskRecordSchema = Joi.object({
   taskId: Joi.string().uuid().required(),
-  date: Joi.string().length(10).required(),
+  date: Joi.date().required(),
   done: Joi.boolean().required(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
@@ -75,7 +75,7 @@ export interface ITask extends IEntity {
   quantity: number | null;
   time: string | null;
   increment: number | null;
-  completedAt?: string | null;
+  completedAt?: Date | null;
   frequency: Frequency;
   value: number | null;
   type: TaskType;
@@ -84,7 +84,7 @@ export interface ITask extends IEntity {
 
 interface ITaskRecord {
   taskId: string;
-  date: string;
+  date: Date;
   done: boolean;
   quantity?: number | null;
   duration?: number | null;
@@ -93,7 +93,7 @@ interface ITaskRecord {
 
 export class TaskRecord {
   public taskId: string;
-  public date: string;
+  public date: Date;
   public done: boolean;
   public duration: number | null;
   public quantity: number | null;
@@ -117,7 +117,7 @@ export default class Task extends Entity {
   public readonly quantity: number;
   public readonly frequency: Frequency;
   public readonly time: string | null;
-  public readonly completedAt: string | null;
+  public readonly completedAt: Date | null;
   public readonly type: TaskType;
   public readonly increment: number | null;
   public readonly runAt: any;

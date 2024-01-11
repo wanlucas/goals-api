@@ -1,10 +1,10 @@
 import db from '../../../infra/db';
-import moment from 'moment';
 import Task, { ITask, TaskType } from '../../entity/Task';
 import { TaskRecord } from '@prisma/client';
 import goalUseCase from '../goalUseCase';
 import Goal from '../../entity/Goal';
 import { NotFoundError, UnauthorizedError } from '../../constant/HttpError';
+import DateTime from '../../entity/DateTime';
 
 export default class UpdateRecord {
   constructor() {
@@ -27,7 +27,7 @@ export default class UpdateRecord {
           id: task.id,
         },
         data: {
-          completedAt: moment().format('YYYY-MM-DD'),
+          completedAt: new DateTime(),
         },
       });
     }
@@ -75,7 +75,7 @@ export default class UpdateRecord {
           id: task.id,
         },
         data: {
-          completedAt: moment().format('YYYY-MM-DD'),
+          completedAt: new DateTime(),
         },
       });
     } else {
@@ -107,13 +107,16 @@ export default class UpdateRecord {
   }
 
   public async execute(taskId: string, record: Partial<TaskRecord>): Promise<void> {
-    // TODO - use internal fn to get today
-    const today = moment().format('YYYY-MM-DD');
+    const today = new DateTime();
+
     const foundTask = await db.task.findUnique({
       include: {
         records: {
           where: {
-            date: today,
+            date: {
+              gte: today.startOfDay(),
+              lte: today.endOfDay(),
+            },
           },
         },
       },

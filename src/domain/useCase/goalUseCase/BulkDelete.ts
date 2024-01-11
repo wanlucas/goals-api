@@ -1,6 +1,6 @@
 
 import db from '../../../infra/db';
-import date from '../../../tool/date';
+import DateTime from '../../entity/DateTime';
 
 export default class BulkDelete {
   public async execute(userId: string, ids: string[]) {
@@ -14,7 +14,7 @@ export default class BulkDelete {
         },
       },
       data: {
-        deletedAt: date.now(),
+        deletedAt: new DateTime(),
       },
     });
 

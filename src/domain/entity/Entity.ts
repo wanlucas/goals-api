@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { v4 as uuid } from 'uuid';
 import { UnprocessableEntityError } from '../constant/HttpError';
+import DateTime from './DateTime';
 
 export interface IEntity {
   id?: string;
@@ -24,8 +25,6 @@ export default abstract class Entity {
   }
 
   protected getDate() {
-    const date = new Date();
-
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+    return new DateTime();
   }
 }

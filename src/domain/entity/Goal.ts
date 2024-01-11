@@ -2,14 +2,13 @@ import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
 import Task, { ITask, TaskType } from './Task';
 import { UnprocessableEntityError } from '../constant/HttpError';
-import moment from 'moment';
 
 const goalSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
   target: Joi.number().min(1).allow(null),
   branchId: Joi.string().uuid().required(),
-  completedAt: Joi.string().length(8).allow(null),
+  completedAt: Joi.date().allow(null),
   score: Joi.allow(null).when('target', {
     is: Joi.number(),
     then: Joi.number().min(0).max(Joi.ref('target')),
@@ -22,14 +21,14 @@ export interface IGoal extends IEntity {
   target?: number | null;
   score?: number | null;
   branchId: string;
-  completedAt?: string | null;
+  completedAt?: Date | null;
 }
 
 export default class Goal extends Entity {
   public readonly description: string;
   public readonly target: number | null;
   public readonly branchId: string;
-  public completedAt: string | null;
+  public completedAt: Date | null;
   public score: number | null;
 
   public constructor (body: IGoal) {

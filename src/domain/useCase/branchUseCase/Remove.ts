@@ -1,6 +1,6 @@
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
-import date from '../../../tool/date';
+import DateTime from '../../entity/DateTime';
 
 export default class Remove {
   public async execute(id: string) {
@@ -37,7 +37,7 @@ export default class Remove {
       return;
     }
 
-    const deletedAt = date.now();
+    const deletedAt = new DateTime();
     const updatedGoals = await db.branch.update({
       where: {
         id,

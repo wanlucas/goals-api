@@ -1,7 +1,7 @@
-import moment from 'moment';
 import db from '../../../infra/db';
 import { TaskWithRecord } from '.';
 import { Frequency } from '../../entity/Task';
+import DateTime from '../../entity/DateTime';
 
 export default class FindCurrent {
   constructor() {
@@ -17,13 +17,16 @@ export default class FindCurrent {
   }
 
   public async execute(userId: string): Promise<any> {
-    const now = moment();
+    const today = new DateTime();
 
     const foundTasks = await db.task.findMany({
       include: {
         records: {
           where: {
-            date: now.format('YYYY-MM-DD'),
+            date: {
+              gte: today.startOfDay(),
+              lte: today.endOfDay(),
+            }
           },
         },
       },
@@ -41,7 +44,10 @@ export default class FindCurrent {
                 completedAt: null,
               },
               {
-                completedAt: now.format('YYYY-MM-DD'),
+                completedAt: {
+                  gte: today.startOfDay(),
+                  lte: today.endOfDay(),
+                }
               },
             ],
           },
@@ -53,13 +59,13 @@ export default class FindCurrent {
               {
                 frequency: Frequency.weekly,
                 runAt: {
-                  array_contains: now.day(),
+                  array_contains: today.getDay(),
                 },
               },
               {
                 frequency: Frequency.monthly,
                 runAt: {
-                  array_contains: now.date(),
+                  array_contains: today.getDate(),
                 },
               },
             ],
