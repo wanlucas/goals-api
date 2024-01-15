@@ -3,8 +3,8 @@ import Joi from 'joi';
 
 const branchSchema = Joi.object({
   id: Joi.string().uuid(),
-  name: Joi.string().min(3).max(25).required(),
-  class: Joi.string().min(3).max(25).allow(null),
+  name: Joi.string().min(2).max(25).required(),
+  class: Joi.string().min(1).max(25).allow(null),
   userId: Joi.string().uuid().required(),
   icon: Joi.string().max(10).allow(null),
 });

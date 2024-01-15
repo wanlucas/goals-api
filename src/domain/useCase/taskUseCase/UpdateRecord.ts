@@ -27,7 +27,7 @@ export default class UpdateRecord {
           id: task.id,
         },
         data: {
-          completedAt: new DateTime(),
+          completedAt: new DateTime().toYearMonthDay(),
         },
       });
     }
@@ -75,7 +75,7 @@ export default class UpdateRecord {
           id: task.id,
         },
         data: {
-          completedAt: new DateTime(),
+          completedAt: new DateTime().toYearMonthDay(),
         },
       });
     } else {
@@ -107,16 +107,13 @@ export default class UpdateRecord {
   }
 
   public async execute(taskId: string, record: Partial<TaskRecord>): Promise<void> {
-    const today = new DateTime();
+    const today = new DateTime().toYearMonthDay();
 
     const foundTask = await db.task.findUnique({
       include: {
         records: {
           where: {
-            date: {
-              gte: today.startOfDay(),
-              lte: today.endOfDay(),
-            },
+            date: today,
           },
         },
       },
@@ -136,14 +133,12 @@ export default class UpdateRecord {
     });
 
     if (!taskRecord.duration && !taskRecord.quantity) {
-      // TODO: create new index
-      await db.taskRecord.deleteMany({
+      await db.taskRecord.delete({
         where: {
-          taskId,
-          date: {
-            gt: today.startOfDay(),
-            lte: today.endOfDay(),
-          },   
+          taskId_date: {
+            taskId,
+            date: today,
+          },
         },
       });
     } else {

@@ -24,7 +24,7 @@ export default abstract class Entity {
     this.id = body.id || uuid();
   }
 
-  protected getDate() {
-    return new DateTime();
+  protected getYearMonthDay() {
+    return new DateTime().toYearMonthDay();
   }
 }

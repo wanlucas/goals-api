@@ -43,7 +43,7 @@ model Goal {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   deletedAt   DateTime?
-  completedAt DateTime?
+  completedAt String?
   tasks       Task[]
   branch      Branch   @relation(fields: [branchId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
@@ -59,7 +59,7 @@ model Task {
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   deletedAt   DateTime?
-  completedAt DateTime?
+  completedAt String?
   frequency   Int
   increment   Int?
   time        String?
@@ -70,7 +70,7 @@ model Task {
 
 model TaskRecord {
   taskId   String
-  date     DateTime
+  date     String
   quantity Int?
   duration Int?
   value    Int?

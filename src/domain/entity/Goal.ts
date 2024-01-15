@@ -1,14 +1,13 @@
 import Entity, { IEntity } from './Entity';
 import Joi from 'joi';
 import Task, { ITask, TaskType } from './Task';
-import { UnprocessableEntityError } from '../constant/HttpError';
 
 const goalSchema = Joi.object({
   id: Joi.string().uuid(),
   description: Joi.string().min(3).max(200).required(),
   target: Joi.number().min(1).allow(null),
   branchId: Joi.string().uuid().required(),
-  completedAt: Joi.date().allow(null),
+  completedAt: Joi.string().length(10).allow(null),
   score: Joi.allow(null).when('target', {
     is: Joi.number(),
     then: Joi.number().min(0).max(Joi.ref('target')),
@@ -21,14 +20,14 @@ export interface IGoal extends IEntity {
   target?: number | null;
   score?: number | null;
   branchId: string;
-  completedAt?: Date | null;
+  completedAt?: string | null;
 }
 
 export default class Goal extends Entity {
   public readonly description: string;
   public readonly target: number | null;
   public readonly branchId: string;
-  public completedAt: Date | null;
+  public completedAt: string | null;
   public score: number | null;
 
   public constructor (body: IGoal) {
@@ -41,7 +40,7 @@ export default class Goal extends Entity {
     this.completedAt = body.completedAt || null;
 
     if (this.isCompleted() && !this.completedAt) {
-      this.completedAt = this.getDate();
+      this.completedAt = this.getYearMonthDay();
     } else if (!this.isCompleted() && this.completedAt) {
       this.completedAt = null;
     }

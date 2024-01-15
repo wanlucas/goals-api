@@ -7,7 +7,6 @@ export default class FindById {
     const foundGoal = await db.goal.findUnique({
       where: {
         id,
-        completedAt: null,
         deletedAt: null,
       }
     });

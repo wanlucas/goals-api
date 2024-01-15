@@ -5,7 +5,6 @@ export default class Done {
     const foundTask = await taskUseCase.findById(id);
 
     await taskUseCase.updateRecord(id, {
-      done: true,
       duration: foundTask.duration,
       quantity: foundTask.quantity,
     });

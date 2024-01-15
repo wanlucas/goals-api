@@ -23,10 +23,7 @@ export default class FindCurrent {
       include: {
         records: {
           where: {
-            date: {
-              gte: today.startOfDay(),
-              lte: today.endOfDay(),
-            }
+            date: today.toYearMonthDay(),
           },
         },
       },
@@ -44,10 +41,7 @@ export default class FindCurrent {
                 completedAt: null,
               },
               {
-                completedAt: {
-                  gte: today.startOfDay(),
-                  lte: today.endOfDay(),
-                }
+                completedAt: today.toYearMonthDay(),
               },
             ],
           },
