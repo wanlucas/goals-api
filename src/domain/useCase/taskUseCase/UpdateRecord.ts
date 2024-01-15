@@ -136,12 +136,14 @@ export default class UpdateRecord {
     });
 
     if (!taskRecord.duration && !taskRecord.quantity) {
-      await db.taskRecord.delete({
+      // TODO: create new index
+      await db.taskRecord.deleteMany({
         where: {
-          taskId_date: {
-            taskId,
-            date: today,
-          },
+          taskId,
+          date: {
+            gt: today.startOfDay(),
+            lte: today.endOfDay(),
+          },   
         },
       });
     } else {

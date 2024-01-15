@@ -62,7 +62,7 @@ const taskSchema = Joi.object({
 const taskRecordSchema = Joi.object({
   taskId: Joi.string().uuid().required(),
   date: Joi.date().required(),
-  done: Joi.boolean().required(),
+  done: Joi.boolean(),
   duration: Joi.number().allow(null),
   quantity: Joi.number().allow(null),
   value: Joi.number().allow(null),
@@ -85,7 +85,7 @@ export interface ITask extends IEntity {
 interface ITaskRecord {
   taskId: string;
   date: Date;
-  done: boolean;
+  done?: boolean;
   quantity?: number | null;
   duration?: number | null;
   value?: number | null;
@@ -104,7 +104,7 @@ export class TaskRecord {
     this.taskId = body.taskId;
     this.date = body.date;
     this.quantity = body.quantity || 0;
-    this.done = body.done;
+    this.done = body.done || false;
     this.duration = body.duration || null;
     this.value = body.value || null;
   }
@@ -161,23 +161,23 @@ export default class Task extends Entity {
   }
 
   public createRecord(record: Omit<ITaskRecord, 'taskId'>) {
-    const duration =
-      this.duration && Math.min(this.duration, record.duration || 0);
+    const duration = this.duration && Math.min(this.duration, record.duration || 0);
     const quantity = Math.min(this.quantity, record.quantity || 0);
 
     const taskRecord = new TaskRecord({
       taskId: this.id,
       date: record.date,
       value: this.value,
-      done: this.quantity === quantity,
       duration,
       quantity,
     });
 
     if (!record.done && duration && record.duration === this.duration) {
       taskRecord.quantity = Math.min(quantity + 1, this.quantity);
-      if (quantity < this.quantity) taskRecord.duration = 0;
+      if (taskRecord.quantity < this.quantity) taskRecord.duration = 0;
     }
+
+    taskRecord.done = taskRecord.quantity === this.quantity;
 
     return taskRecord;
   }

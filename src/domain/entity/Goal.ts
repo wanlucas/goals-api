@@ -48,22 +48,16 @@ export default class Goal extends Entity {
   }
 
   public createTask(task: Omit<ITask, 'goalId'>): Task {
-    if (this.target) {
-      if (!task.value) {
-        throw new UnprocessableEntityError('Campo value obrigatório');
-      }
-
-      if (task.value > this.target) {
-        throw new UnprocessableEntityError('Valor maior que a meta');
-      }
+    if (task.type === TaskType.crescent) {
+      task.value = this.score;
+    } else if (!this.target) {
+      task.type = TaskType.infinite;
+      task.value = null;
     }
 
     return new Task({
       ...task,
       goalId: this.id,
-      value: this.target ? task.value : null,
-      type: this.target ? task.type : TaskType.infinite,
-      quantity: task.quantity || 1,
     });
   }
 
