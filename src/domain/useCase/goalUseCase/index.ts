@@ -12,10 +12,10 @@ export type ICreateGoal =  Omit<IGoal, 'score' | 'branchId'>
 
 class GoalUseCase {
   constructor(
-    public findAll: (userId: string) => Promise<Body<Goal>[]>,
-    public findByBranchId: (branchId: string) => Promise<IGoal[]>,
+    public findAll: (userId: string) => Promise<Body<Body<Goal>>[]>,
+    public findByBranchId: (branchId: string) => Promise<Body<Goal>[]>,
     public bulkCreate: (userId: string, branchId: string, goals: ICreateGoal[]) => Promise<void>,
-    public findById: (id: string) => Promise<Goal>,
+    public findById: (id: string) => Promise<Body<Goal>>,
     public create: (userId: string, body: IGoal) => Promise<void>,
     public bulkDelete: (userId: string, ids: string[]) => Promise<void>,
     public update: (id: string, body: Partial<IGoal>) => Promise<void>,

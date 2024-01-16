@@ -1,9 +1,10 @@
+import { Body } from '../../../application/Interface';
 import db from '../../../infra/db';
 import { NotFoundError } from '../../constant/HttpError';
 import Goal from '../../entity/Goal';
 
 export default class FindById {
-  public async execute(id: string): Promise<Goal> {
+  public async execute(id: string): Promise<Body<Goal>> {
     const foundGoal = await db.goal.findUnique({
       where: {
         id,
@@ -15,6 +16,6 @@ export default class FindById {
       throw new NotFoundError('Meta não encontrada!');
     }
 
-    return new Goal(foundGoal);
+    return foundGoal;
   }
 }

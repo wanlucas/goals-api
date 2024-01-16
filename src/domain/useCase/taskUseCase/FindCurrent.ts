@@ -1,26 +1,26 @@
 import db from '../../../infra/db';
-import { TaskWithRecord } from '.';
+import { TaskWithGoalAndRecord } from '.';
 import { Frequency } from '../../entity/Task';
 import DateTime from '../../entity/DateTime';
+import { Body } from '../../../application/Interface';
 
 export default class FindCurrent {
   constructor() {
     this.execute = this.execute.bind(this);
   }
 
-  // TODO: remove any
-  private format(tasks: any[]): TaskWithRecord[] {
-    return tasks.map(({ records, ...task }) => ({
-      ...task,
-      record: records[0] || null,
-    }));
-  }
-
-  public async execute(userId: string): Promise<any> {
+  public async execute(userId: string): Promise<Body<TaskWithGoalAndRecord>[]> {
     const today = new DateTime();
 
     const foundTasks = await db.task.findMany({
       include: {
+        goal: {
+          select: {
+            description: true,
+            score: true,
+            target: true,
+          }
+        },
         records: {
           where: {
             date: today.toYearMonthDay(),
@@ -74,6 +74,9 @@ export default class FindCurrent {
       },
     });
 
-    return this.format(foundTasks);
+    return foundTasks.map(({ records, ...task }) => ({
+      ...task,
+      record: records[0] || null,
+    }));
   }
 }

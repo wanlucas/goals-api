@@ -42,7 +42,7 @@ const taskSchema = Joi.object({
     })
     .when('type', {
       is: TaskType.crescent,
-      then: Joi.number().min(1).required(),
+      then: Joi.number().min(0).required(),
     }),
   runAt: Joi.array()
     .when('frequency', {
@@ -130,7 +130,7 @@ export default class Task extends Entity {
     this.goalId = body.goalId;
     this.frequency = body.frequency;
     this.time = body.time || null;
-    this.value = body.value || null;
+    this.value = body.value ?? null;
     this.duration = body.duration || null;
     this.completedAt = body.completedAt || null;
     this.quantity = body.quantity || 1;
@@ -149,15 +149,13 @@ export default class Task extends Entity {
   }
 
   public setValue(value: number): void {
-    if (this.value && this.type === TaskType.crescent) {
+    if (this.value !== null && this.type === TaskType.crescent) {
       this.value = value;
     }
   }
 
   public addValue(value: number): void {
-    if (this.value && this.type === TaskType.crescent) {
-      this.value += value;
-    }
+    this.setValue(this.value! + value);
   }
 
   public createRecord(record: Omit<ITaskRecord, 'taskId'>) {

@@ -8,11 +8,7 @@ const goalSchema = Joi.object({
   target: Joi.number().min(1).allow(null),
   branchId: Joi.string().uuid().required(),
   completedAt: Joi.string().length(10).allow(null),
-  score: Joi.allow(null).when('target', {
-    is: Joi.number(),
-    then: Joi.number().min(0).max(Joi.ref('target')),
-    otherwise: Joi.forbidden(),
-  }),
+  score: Joi.number().allow(null),
 });
 
 export interface IGoal extends IEntity {
@@ -22,7 +18,7 @@ export interface IGoal extends IEntity {
   branchId: string;
   completedAt?: string | null;
 }
-
+// TODO - mudar lógica de relacionamento de entitades ex: new task(itask, goal)
 export default class Goal extends Entity {
   public readonly description: string;
   public readonly target: number | null;
@@ -36,8 +32,10 @@ export default class Goal extends Entity {
     this.description = body.description;
     this.target = body.target || null;
     this.branchId = body.branchId;
-    this.score = body.score || (this.target ? 0 : null);
+    this.score = body.score || 0;
     this.completedAt = body.completedAt || null;
+
+    if (!this.target) this.score = null;
 
     if (this.isCompleted() && !this.completedAt) {
       this.completedAt = this.getYearMonthDay();
@@ -48,7 +46,7 @@ export default class Goal extends Entity {
 
   public createTask(task: Omit<ITask, 'goalId'>): Task {
     if (task.type === TaskType.crescent) {
-      task.value = this.score;
+      task.value = this.score! + task.increment!;
     } else if (!this.target) {
       task.type = TaskType.infinite;
       task.value = null;

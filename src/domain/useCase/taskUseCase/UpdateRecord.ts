@@ -12,7 +12,7 @@ export default class UpdateRecord {
   }
 
   private async cumulativeDone(task: Task) {
-    if (!task.value) {
+    if (task.value === null) {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
@@ -37,7 +37,7 @@ export default class UpdateRecord {
 
   private async cumulativeUndone(task: Task) {
     // TODO: remove this
-    if (!task.value) {
+    if (task.value === null) {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
@@ -60,7 +60,7 @@ export default class UpdateRecord {
 
   private async crescentDone(task: Task) {
     // TODO: remove this
-    if (!task.value) {
+    if (task.value === null) {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
@@ -94,7 +94,7 @@ export default class UpdateRecord {
 
   private async crescentUndone(task: Task) {
     // TODO: remove this
-    if (!task.value) {
+    if (task.value === null) {
       throw new UnauthorizedError('Campo value inexistente');
     }
 
@@ -102,6 +102,15 @@ export default class UpdateRecord {
     const goal = new Goal(foundGoal);
 
     goal.incrementScore(-task.increment!);
+
+    await db.task.update({
+      where: {
+        id: task.id,
+      },
+      data: {
+        completedAt: null,
+      },
+    });
     
     await goalUseCase.update(goal.id, goal);
   }
@@ -125,7 +134,9 @@ export default class UpdateRecord {
     if (!foundTask) throw new NotFoundError('Tarefa não encontrada');
 
     const foundRecord = foundTask?.records[0] || {};
+
     const task = new Task(foundTask as ITask);
+
     const taskRecord = task.createRecord({
       ...foundRecord,
       ...record,
