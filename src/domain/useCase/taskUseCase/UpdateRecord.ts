@@ -79,13 +79,15 @@ export default class UpdateRecord {
         },
       });
     } else {
-      task.setValue(Math.min(task.value + task.increment!, goal.target!));
+      task.setValue(Math.min(goal.score! + task.increment!, goal.target!));
 
       await db.task.update({
         where: {
           id: task.id,
         },
-        data: task,
+        data: {
+          value: task.value,
+        },
       });
     }
 
@@ -142,6 +144,10 @@ export default class UpdateRecord {
       ...record,
       date: today,
     });
+
+    if (task.type === TaskType.cumulative && taskRecord.value) {
+      task.value = taskRecord.value;
+    }
 
     if (!taskRecord.duration && !taskRecord.quantity) {
       await db.taskRecord.delete({

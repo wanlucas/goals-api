@@ -11,9 +11,6 @@ export default class FindById {
       },
       include: {
         goals: {
-          where: {
-            completedAt: null,
-          },
           include: {
             tasks: true,
           },

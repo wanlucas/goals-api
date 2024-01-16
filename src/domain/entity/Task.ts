@@ -165,7 +165,7 @@ export default class Task extends Entity {
     const taskRecord = new TaskRecord({
       taskId: this.id,
       date: record.date,
-      value: this.value,
+      value: record.value || this.value,
       duration,
       quantity,
     });
